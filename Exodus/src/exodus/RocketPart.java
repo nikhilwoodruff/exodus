@@ -5,6 +5,7 @@
  */
 package exodus;
 
+import java.awt.Graphics;
 import java.awt.Image;
 
 /**
@@ -16,5 +17,8 @@ public abstract class RocketPart{
     protected int price;
     protected int mass;
     protected Image icon;
-    
+    public abstract void addpart(Rocket r);
+    public abstract void drawPart(Graphics g, int x, int y);
+    public int getWidth(){}
+    public int getHeight(){}
 }
