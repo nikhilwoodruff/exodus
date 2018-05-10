@@ -10,5 +10,5 @@ package exodus;
  * @author 12nwoodruff
  */
 public class ExodusData {
-    
+    public Island[] islands = new Island[3];
 }

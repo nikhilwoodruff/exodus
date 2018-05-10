@@ -7,8 +7,10 @@ package exodus;
 
 /**
  *
- * @author 12nwoodruff
+ * @author user
  */
-public class Island {
+public class RocketBase {
     public int population;
+    public int numberOfScientists;
+    public RocketPart[] rocket =  new RocketPart[5];
 }
