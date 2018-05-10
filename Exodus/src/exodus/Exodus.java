@@ -5,11 +5,13 @@
  */
 package exodus;
 
+import javax.swing.JFrame;
+
 /**
  *
  * @author 12nwoodruff
  */
-public class Exodus {
+public class Exodus extends JFrame{
 
     /**
      * @param args the command line arguments
