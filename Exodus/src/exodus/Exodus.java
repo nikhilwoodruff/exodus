@@ -53,7 +53,7 @@ public class Exodus extends JFrame implements MouseListener{
     }
     
     public Exodus(){
-        ExodusData player = new ExodusData(0.5f);
+        ExodusData player = new ExodusData(0.5f, 10);
         setTitle("Exodus");
         setSize(1800,1000);
         setVisible(true);
@@ -69,7 +69,7 @@ public class Exodus extends JFrame implements MouseListener{
             {
                 e.printStackTrace();
             }
-        }, 0, 5, TimeUnit.SECONDS);
+        }, 0, (long) player.yearLength, TimeUnit.SECONDS);
     }
     
     public static void main(String[] args) {
