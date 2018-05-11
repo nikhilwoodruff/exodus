@@ -16,7 +16,6 @@ public class ExodusData {
     public int worldPopulation;
     public float worldTime;
     public float worldEndTime;
-    public float flightCost;
     public ExodusData(float difficulty)
     {
         worldPopulation = 0;
@@ -28,7 +27,6 @@ public class ExodusData {
         base  = new RocketBase(difficulty);
         worldTime = 0;
         worldEndTime = 50;
-        flightCost = 100 * difficulty;
     }
     public void nextYear()
     {
@@ -44,6 +42,6 @@ public class ExodusData {
     {
         islands[fromIslandIndex].population -= size;
         islands[toIslandIndex].population += size;
-        islands[fromIslandIndex].pay(flightCost);
+        islands[fromIslandIndex].pay(10 / islands[fromIslandIndex].gdpPerCapita);
     }
 }

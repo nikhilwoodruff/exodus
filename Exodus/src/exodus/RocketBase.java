@@ -23,9 +23,5 @@ public class RocketBase {
         population = (int) Math.floor(1000 * (1-difficulty));
         numberOfScientists = (int) Math.floor(250 * (1-difficulty));
         partsInInventory = new ArrayList<>();
-        if(difficulty < 0.25)
-        {
-            
-        }
     }
 }

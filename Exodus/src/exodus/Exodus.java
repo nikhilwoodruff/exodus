@@ -54,11 +54,6 @@ public class Exodus extends JFrame implements MouseListener{
     
     public Exodus(){
         ExodusData player = new ExodusData(0.5f);
-        for(int i = 0; i < 50; i++)
-        {
-            player.nextYear();
-            System.out.println(player.islands[0].gdpPerCapita);
-        }
         setTitle("Exodus");
         setSize(1800,1000);
         setVisible(true);
@@ -68,16 +63,13 @@ public class Exodus extends JFrame implements MouseListener{
         exec.scheduleAtFixedRate(() -> {
             try
             {
-                //player.nextYear();
-                //System.out.println(player.islands[0].money);
-                //System.out.println(player.islands[0].crimeRate);
-                //System.out.println(player.islands[0].gdpPerCapita);
+                player.nextYear();
             }
             catch(Exception e)
             {
                 e.printStackTrace();
             }
-        }, 0, 5, TimeUnit.MILLISECONDS);
+        }, 0, 5, TimeUnit.SECONDS);
     }
     
     public static void main(String[] args) {
