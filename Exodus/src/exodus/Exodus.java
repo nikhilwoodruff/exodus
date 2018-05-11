@@ -12,6 +12,9 @@ import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import javax.swing.JFrame;
 
 /**
@@ -46,14 +49,28 @@ public class Exodus extends JFrame implements MouseListener{
         g.drawLine(0, 0, mouse.x, mouse.y);
         
         repaint();
+        //ISSUE: when moving the window, the mouse position becomes offset - fullscreen?
     }
     
     public Exodus(){
+        ExodusData player = new ExodusData(0.5f);
         setTitle("Exodus");
         setSize(1800,1000);
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         addMouseListener(this);
+        ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
+        exec.scheduleAtFixedRate(() -> {
+            try
+            {
+                player.nextYear();
+                System.out.println(player.islands[0].money);
+            }
+            catch(Exception e)
+            {
+                e.printStackTrace();
+            }
+        }, 0, 5, TimeUnit.MILLISECONDS);
     }
     
     public static void main(String[] args) {

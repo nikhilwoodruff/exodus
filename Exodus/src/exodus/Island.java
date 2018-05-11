@@ -20,16 +20,18 @@ public class Island {
     public float landArea;
     public Island(float difficulty) 
     {
-        crimeRate = (int) Math.floor(0.2 * difficulty);
-        population = (int) Math.floor(1000000 * difficulty);
-        money = (int) Math.floor(100000000 * difficulty);
-        gdpPerCapita = (int) Math.floor(60000 * difficulty);
+        crimeRate = 0.2f * difficulty;
+        population = (int) Math.floor(100000 * difficulty);
+        money = 100f * difficulty; //in bn
+        gdpPerCapita = 60f * difficulty;
         taxRate = 0.15f;
-        landArea = (int) Math.floor(1000000 / difficulty);
+        landArea = 1000f / difficulty;
+        foodSecurity = 0.85f;
+        jobSecurity = 0.95f;
     }
     public void collectTax()
     {
-        money += gdpPerCapita * taxRate;
+        money += gdpPerCapita * taxRate * population;
     }
     public void pay(float amount)
     {
@@ -49,6 +51,11 @@ public class Island {
     }
     public void updatePopulation()
     {
-        crimeRate += (population / landArea) * 0.01f;
+        crimeRate += 0.0001f * (1 - jobSecurity) * (1 - foodSecurity) * (population / landArea) * (0.5 + Math.random()) * (1 - crimeRate);
+        gdpPerCapita *= 1 - (crimeRate); 
+    }
+    public void upgradeFarms()
+    {
+        foodSecurity = 1 - (float) Math.pow(1 - foodSecurity, 1.5);
     }
 }

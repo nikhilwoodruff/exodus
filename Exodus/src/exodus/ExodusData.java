@@ -20,10 +20,10 @@ public class ExodusData {
     public ExodusData(float difficulty)
     {
         worldPopulation = 0;
-        for(Island island : islands)
+        for(int i = 0; i < 3; i++)
         {
-            island = new Island(difficulty);
-            worldPopulation += island.population;
+            islands[i] = new Island(difficulty);
+            worldPopulation += islands[i].population;
         }
         base  = new RocketBase(difficulty);
         worldTime = 0;
@@ -33,11 +33,12 @@ public class ExodusData {
     public void nextYear()
     {
         //occurs every year
-        for(Island island : islands)
+        for(int i = 0; i < 3; i++)
         {
-            island.collectTax();
-            island.updatePopulation();
+            islands[i].collectTax();
+            islands[i].updatePopulation();
         }
+        worldTime++;
     }
     public void movePopulation(int fromIslandIndex, int toIslandIndex, int size)
     {
