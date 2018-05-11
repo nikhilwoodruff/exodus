@@ -7,10 +7,11 @@ package exodus;
 
 /**
  *
- * @author 12nwoodruff
+ * @author user
  */
-public class ExodusData {
-    public Island[] islands = new Island[3];
-    public RocketBase base = new RocketBase();
-    public int worldPopulation;
+public class RocketBase {
+    public int population;
+    public int numberOfScientists;
+    public Rocket rocket =  new Rocket();
+    
 }
