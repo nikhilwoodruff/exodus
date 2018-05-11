@@ -6,6 +6,8 @@
 package exodus;
 
 import java.awt.Graphics;
+import java.util.ArrayList;
+import javax.swing.JFrame;
 
 /**
  *
@@ -13,15 +15,22 @@ import java.awt.Graphics;
  */
 public class Rocket {
     
-    RocketPart[] parts;
     protected int price;
     protected int stages;
     
+    ArrayList<RocketStage> rocketStages = new ArrayList();
     public void fly(Graphics g){}
-    public void drawRocket(){}
-    public int countStages(){
-        int stages = 1;
-        this.stages = stages;
-        return stages;
+    public void drawRocket(Graphics g, int x, int y,JFrame jf){
+        for(RocketStage stage : rocketStages){
+            int totalHeight = 0;
+            stage.drawStage(g,x,y-totalHeight,jf);
+            totalHeight += stage.getHeight(jf);
+        }
+    }
+    
+    
+    
+    public Rocket(){
+        rocketStages.add(new RocketStage());
     }
 }

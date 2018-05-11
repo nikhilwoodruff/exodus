@@ -7,6 +7,7 @@ package exodus;
 
 import java.awt.Graphics;
 import java.awt.Image;
+import javax.swing.JFrame;
 
 /**
  *
@@ -17,8 +18,21 @@ public abstract class RocketPart{
     protected int price;
     protected int mass;
     protected Image icon;
-    public abstract void addpart(Rocket r);
-    public abstract void drawPart(Graphics g, int x, int y);
-    public int getWidth(){}
-    public int getHeight(){}
+    protected Image bottomPartIcon;
+    protected boolean isBottomPart;
+    
+    public void drawPart(Graphics g, int x, int y,JFrame jf){
+        if(isBottomPart){
+            g.drawImage(bottomPartIcon, x, y, jf);
+        }else{
+            g.drawImage(icon, x, y, jf);
+        }
+    }
+    public int getHeight(JFrame jf){
+        if(isBottomPart){
+            return bottomPartIcon.getHeight(jf);
+        }else{
+            return icon.getHeight(jf);
+        }
+    }
 }
