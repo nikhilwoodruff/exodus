@@ -13,6 +13,7 @@ import java.util.ArrayList;
  * @author user
  */
 public class RocketBase {
+    public float money;
     public int population;
     public int numberOfScientists;
     public Rocket rocket =  new Rocket();
@@ -20,6 +21,7 @@ public class RocketBase {
     
     public RocketBase(float difficulty)
     {
+        money = difficulty * 10000;
         population = (int) Math.floor(1000 * (1-difficulty));
         numberOfScientists = (int) Math.floor(250 * (1-difficulty));
         partsInInventory = new ArrayList<>();

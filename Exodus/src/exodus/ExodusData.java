@@ -17,7 +17,8 @@ public class ExodusData {
     public float worldTime;
     public float worldEndTime;
     public float climateChange;
-    public ExodusData(float difficulty)
+    public float yearLength;
+    public ExodusData(float difficulty, int numberOfMinutes)
     {
         worldPopulation = 0;
         for(int i = 0; i < 3; i++)
@@ -27,7 +28,8 @@ public class ExodusData {
         }
         base  = new RocketBase(difficulty);
         worldTime = 0;
-        worldEndTime = 50;
+        yearLength = numberOfMinutes * 60 / 100;
+        worldEndTime = 100;
         climateChange = 0;
     }
     public void nextYear()
