@@ -25,7 +25,7 @@ public class RocketBase {
         partsInInventory = new ArrayList<>();
         if(difficulty < 0.25)
         {
-            partsInInventory.add()
+            
         }
     }
 }
