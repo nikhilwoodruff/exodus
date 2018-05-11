@@ -11,4 +11,6 @@ package exodus;
  */
 public class ExodusData {
     public Island[] islands = new Island[3];
+    public RocketBase base = new RocketBase();
+    public int worldPopulation;
 }
