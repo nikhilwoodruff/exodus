@@ -18,6 +18,8 @@ public class Island {
     public float foodSecurity;
     public float jobSecurity;
     public float landArea;
+    public float happiness;
+    public float climateChange;
     public Island(float difficulty) 
     {
         crimeRate = 0.2f * difficulty;
@@ -28,6 +30,7 @@ public class Island {
         landArea = 1000f / difficulty;
         foodSecurity = 0.85f;
         jobSecurity = 0.95f;
+        happiness = 0.75f;
     }
     public void collectTax()
     {
@@ -43,16 +46,34 @@ public class Island {
     }
     public void triggerDisaster(int type)
     {
-        
+        //Drought, terrorist attack, etc
     }
     public void triggerCatastrophe(int type)
     {
-        
+        //Global stock market crash, hurricane, blizzard, etc
     }
     public void updatePopulation()
     {
         crimeRate += 0.001f * (1 - jobSecurity) * (1 - foodSecurity) * (population / landArea) * (0.5 + Math.random()) * (1 - crimeRate);
         gdpPerCapita *= 1 - (crimeRate * 1f); 
+        happiness *= 0.1 + (1 - crimeRate);
+        if(happiness > 1)
+        {
+            happiness = 1;
+        }
+        if(happiness < 0.05)
+        {
+            //REVOLUTION
+        }
+        float random = (float) Math.random() * 10;
+        if(random * 5 < 10 * climateChange)
+        {
+            triggerCatastrophe(0);
+        }
+        else if(random * 2 < 10 * climateChange)
+        {
+            triggerDisaster(0);
+        }
     }
     public void upgradeFarms()
     {
@@ -66,6 +87,7 @@ public class Island {
     {
         float deltaTax = target - taxRate;
         taxRate = target;
-        jobSecurity += deltaTax;
+        jobSecurity -= deltaTax * 0.4;
+        happiness -= deltaTax * 0.6;
     }
 }

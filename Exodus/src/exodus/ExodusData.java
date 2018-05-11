@@ -16,6 +16,7 @@ public class ExodusData {
     public int worldPopulation;
     public float worldTime;
     public float worldEndTime;
+    public float climateChange;
     public ExodusData(float difficulty)
     {
         worldPopulation = 0;
@@ -27,14 +28,17 @@ public class ExodusData {
         base  = new RocketBase(difficulty);
         worldTime = 0;
         worldEndTime = 50;
+        climateChange = 0;
     }
     public void nextYear()
     {
+        climateChange = worldTime / worldEndTime;
         //occurs every year
         for(int i = 0; i < 3; i++)
         {
             islands[i].collectTax();
             islands[i].updatePopulation();
+            islands[i].climateChange = climateChange;
         }
         worldTime++;
     }
