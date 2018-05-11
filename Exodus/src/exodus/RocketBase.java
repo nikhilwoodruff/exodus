@@ -12,5 +12,6 @@ package exodus;
 public class RocketBase {
     public int population;
     public int numberOfScientists;
-    public RocketPart[] rocket =  new RocketPart[5];
+    public Rocket rocket =  new Rocket();
+    
 }
