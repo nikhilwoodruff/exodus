@@ -5,6 +5,9 @@
  */
 package exodus;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author 12nwoodruff
@@ -18,6 +21,7 @@ public class ExodusData {
     public float worldEndTime;
     public float climateChange;
     public float yearLength;
+    List<String[]> history = new ArrayList<String[]>();
     public ExodusData(float difficulty, int numberOfMinutes)
     {
         worldPopulation = 0;
@@ -34,6 +38,7 @@ public class ExodusData {
     }
     public void nextYear()
     {
+        printYearlySummary();
         climateChange = worldTime / worldEndTime;
         //occurs every year
         for(int i = 0; i < 3; i++)
@@ -49,5 +54,27 @@ public class ExodusData {
         islands[fromIslandIndex].population -= size;
         islands[toIslandIndex].population += size;
         islands[fromIslandIndex].pay(10 / islands[fromIslandIndex].gdpPerCapita);
+    }
+    void printYearlySummary() //Just for csv data analysis
+    {
+        String[] historicEntry = new String[37];
+        historicEntry[0] = String.valueOf(worldPopulation);
+        historicEntry[1] = String.valueOf(worldTime);
+        historicEntry[2] = String.valueOf(worldEndTime);
+        historicEntry[3] = String.valueOf(climateChange);
+        for(int i = 0; i < islands.length; i++)
+        {
+            historicEntry[4+(i * 10)] = String.valueOf(islands[i].population);
+            historicEntry[5+(i * 10)] = String.valueOf(islands[i].money);
+            historicEntry[6+(i * 10)] = String.valueOf(islands[i].gdpPerCapita);
+            historicEntry[7+(i * 10)] = String.valueOf(islands[i].taxRate);
+            historicEntry[8+(i * 10)] = String.valueOf(islands[i].crimeRate);
+            historicEntry[9+(i * 10)] = String.valueOf(islands[i].foodSecurity);
+            historicEntry[10+(i * 10)] = String.valueOf(islands[i].jobSecurity);
+            historicEntry[11+(i * 10)] = String.valueOf(islands[i].landArea);
+            historicEntry[12+(i * 10)] = String.valueOf(islands[i].happiness);
+            historicEntry[13+(i * 10)] = String.valueOf(islands[i].climateChange);
+        }
+        history.add(historicEntry);
     }
 }

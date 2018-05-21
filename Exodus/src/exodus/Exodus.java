@@ -53,23 +53,37 @@ public class Exodus extends JFrame implements MouseListener{
     }
     
     public Exodus(){
-        ExodusData player = new ExodusData(0.5f, 10);
+        ExodusData game = new ExodusData(0.5f, 10);
         setTitle("Exodus");
         setSize(1800,1000);
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         addMouseListener(this);
+        /*for(int i = 0; i < 250; i++)
+        {
+            game.nextYear();
+        }
+        String csvFile = "";
+        for(int i = 0; i < 250; i++)
+        {
+            for(int j = 0; j < 34; j++)
+            {
+                csvFile += game.history.get(i)[j] + ", ";
+            }
+            csvFile += "\n";
+        }
+        System.out.println(csvFile);*/
         ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
         exec.scheduleAtFixedRate(() -> {
             try
             {
-                player.nextYear();
+                game.nextYear();
             }
             catch(Exception e)
             {
                 e.printStackTrace();
             }
-        }, 0, (long) player.yearLength, TimeUnit.SECONDS);
+        }, 0, (long) game.yearLength, TimeUnit.SECONDS);
     }
     
     public static void main(String[] args) {
