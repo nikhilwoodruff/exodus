@@ -5,8 +5,9 @@
  */
 package exodus;
 
-import javax.swing.JButton;
+import java.awt.Color;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 /**
@@ -21,13 +22,21 @@ public class ExodusUI {
     {
         JFrame jf = new JFrame();
         JPanel jp = new JPanel();
-        jf.add(jp);
-        jf.revalidate();
-        jf.setVisible(true);
+        
         jf.setSize(1920, 1080);
         jf.setExtendedState(JFrame.MAXIMIZED_BOTH);
         jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        JButton btn = new JButton("Click me");
-        jp.add(btn);
+        jf.setUndecorated(true);
+        
+        JLabel localMenu = new JLabel();
+        localMenu.setBackground(Color.RED);
+        localMenu.setLocation(0, 580);
+        localMenu.setSize(300, 500);
+        localMenu.setVisible(true);
+        
+        jp.add(localMenu);
+        jf.add(jp);
+        jf.revalidate();
+        jf.setVisible(true);
     }
 }
