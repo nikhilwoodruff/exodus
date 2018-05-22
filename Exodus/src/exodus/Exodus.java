@@ -83,7 +83,7 @@ public class Exodus extends JFrame implements MouseListener{
             {
                 e.printStackTrace();
             }
-        }, 0, (long) game.yearLength, TimeUnit.SECONDS);
+        }, 0, (long) game.getYearLength(), TimeUnit.SECONDS);
     }
     
     public static void main(String[] args) {

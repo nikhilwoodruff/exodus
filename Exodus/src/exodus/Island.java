@@ -10,16 +10,16 @@ package exodus;
  * @author 12nwoodruff
  */
 public class Island {
-    int population;
-    float money;
-    float gdpPerCapita;
-    float taxRate;
-    float crimeRate;
-    float foodSecurity;
-    float jobSecurity;
-    float landArea;
-    float happiness;
-    float climateChange;
+    private int population;
+    private float money;
+    private float gdpPerCapita;
+    private float taxRate;
+    private float crimeRate;
+    private float foodSecurity;
+    private float jobSecurity;
+    private float landArea;
+    private float happiness;
+    private float climateChange;
 
     public int getPopulation() {
         return population;
@@ -28,7 +28,11 @@ public class Island {
     public void setPopulation(int population) {
         this.population = population;
     }
-
+    
+    public void changePopulation(int number) {
+        this.population += number;
+    }
+    
     public float getMoney() {
         return money;
     }
