@@ -28,9 +28,9 @@ public class Exodus extends JFrame implements MouseListener{
      */
     Point mouse;
     boolean mouseDown;
-    
+    ExodusData game;
     Image dbImage;
-    
+    float zoomScale;
     @Override
     public void paint(Graphics g){
         dbImage = createImage(getWidth(),getHeight());
@@ -40,20 +40,63 @@ public class Exodus extends JFrame implements MouseListener{
     
     public void drawFrame(Graphics g){
         mouse = MouseInfo.getPointerInfo().getLocation();
-        
-        if(mouseDown){
-            g.setColor(Color.RED);
-        }else{
-            g.setColor(Color.BLACK);
+        g.setColor(Color.WHITE);
+        g.drawString(String.valueOf(game.getWorldTime()), 50, 850);
+        g.setColor(Color.BLUE);
+        g.fillRect(0, 0, 1920, 1080);
+        g.setColor(Color.GREEN);
+        g.fillRect(50, 125, 250, 350);
+        g.fillRect(1100, 120, 350, 250);
+        g.fillRect(550, 600, 500, 200);
+        int menuHit = isIntersectingMenu(mouse.x, mouse.y);
+        if(menuHit != -1)
+        {
+            if(menuHit == 1)
+            {
+                g.setColor(Color.GRAY);
+                g.fillRect(0, 500, 300, 500);
+                g.setColor(Color.RED);
+                g.fillRect(1500, 500, 300, 500);
+            }
+            else
+            {
+                g.setColor(Color.RED);
+                g.fillRect(0, 500, 300, 500);
+                g.setColor(Color.GRAY);
+                g.fillRect(1500, 500, 300, 500);
+            }
         }
-        g.drawLine(0, 0, mouse.x, mouse.y);
-        
+        else
+        {
+            g.setColor(Color.GRAY);
+            g.fillRect(0, 500, 300, 500);
+            g.fillRect(1500, 500, 300, 500);
+        }
         repaint();
         //ISSUE: when moving the window, the mouse position becomes offset - fullscreen?
     }
-    
+    int isIntersectingMenu(int x, int y)
+    {
+        if(y >= 500)
+        {
+            if(x <= 300)
+            {
+                return 0;
+            }
+            else if(x >= 1500)
+            {
+                return 1;
+            }
+            return -1;
+        }
+        else
+        {
+            return -1;
+        }
+    }
     public Exodus(){
-        ExodusData game = new ExodusData(0.5f, 10);
+        game = new ExodusData(0.5f, 10);
+        game.setYearLength(1);
         setTitle("Exodus");
         setSize(1800,1000);
         setVisible(true);
