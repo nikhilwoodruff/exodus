@@ -25,6 +25,9 @@ public class RocketStage {
         }
     }
     
+    public void addPart(int position,RocketPart part)throws PartAddingException{
+    }
+    
     public int fuelMass;
     public int stageMass;
     public int specificImpulse;
