@@ -59,7 +59,7 @@ public class Exodus extends JFrame implements MouseListener{
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         addMouseListener(this);
-        /*for(int i = 0; i < 250; i++)
+        /*for(int i = 0; i < 250; i++) //Just for looking at game data
         {
             game.nextYear();
         }

@@ -13,15 +13,90 @@ import java.util.List;
  * @author 12nwoodruff
  */
 public class ExodusData {
-    public float difficulty;
-    public Island[] islands = new Island[3];
-    public RocketBase base;
-    public int worldPopulation;
-    public float worldTime;
-    public float worldEndTime;
-    public float climateChange;
-    public float yearLength;
+    float difficulty;
+    Island[] islands = new Island[3];
+    RocketBase base;
+    int worldPopulation;
+    float worldTime;
+    float worldEndTime;
+    float climateChange;
+    float yearLength;
     List<String[]> history = new ArrayList<String[]>();
+
+    public float getDifficulty() {
+        return difficulty;
+    }
+
+    public void setDifficulty(float difficulty) {
+        this.difficulty = difficulty;
+    }
+
+    public Island[] getIslands() {
+        return islands;
+    }
+
+    public void setIslands(Island[] islands) {
+        this.islands = islands;
+    }
+
+    public RocketBase getBase() {
+        return base;
+    }
+
+    public void setBase(RocketBase base) {
+        this.base = base;
+    }
+
+    public int getWorldPopulation() {
+        return worldPopulation;
+    }
+
+    public void setWorldPopulation(int worldPopulation) {
+        this.worldPopulation = worldPopulation;
+    }
+
+    public float getWorldTime() {
+        return worldTime;
+    }
+
+    public void setWorldTime(float worldTime) {
+        this.worldTime = worldTime;
+    }
+
+    public float getWorldEndTime() {
+        return worldEndTime;
+    }
+
+    public void setWorldEndTime(float worldEndTime) {
+        this.worldEndTime = worldEndTime;
+    }
+
+    public float getClimateChange() {
+        return climateChange;
+    }
+
+    public void setClimateChange(float climateChange) {
+        this.climateChange = climateChange;
+    }
+
+    public float getYearLength() {
+        return yearLength;
+    }
+
+    public void setYearLength(float yearLength) {
+        this.yearLength = yearLength;
+    }
+
+    public List<String[]> getHistory() {
+        return history;
+    }
+
+    public void setHistory(List<String[]> history) {
+        this.history = history;
+    }
+    
+    
+    
     public ExodusData(float difficulty, int numberOfMinutes)
     {
         worldPopulation = 0;

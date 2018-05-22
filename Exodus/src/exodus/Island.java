@@ -10,16 +10,99 @@ package exodus;
  * @author 12nwoodruff
  */
 public class Island {
-    public int population;
-    public float money;
-    public float gdpPerCapita;
-    public float taxRate;
-    public float crimeRate;
-    public float foodSecurity;
-    public float jobSecurity;
-    public float landArea;
-    public float happiness;
-    public float climateChange;
+    int population;
+    float money;
+    float gdpPerCapita;
+    float taxRate;
+    float crimeRate;
+    float foodSecurity;
+    float jobSecurity;
+    float landArea;
+    float happiness;
+    float climateChange;
+
+    public int getPopulation() {
+        return population;
+    }
+
+    public void setPopulation(int population) {
+        this.population = population;
+    }
+
+    public float getMoney() {
+        return money;
+    }
+
+    public void setMoney(float money) {
+        this.money = money;
+    }
+
+    public float getGdpPerCapita() {
+        return gdpPerCapita;
+    }
+
+    public void setGdpPerCapita(float gdpPerCapita) {
+        this.gdpPerCapita = gdpPerCapita;
+    }
+
+    public float getTaxRate() {
+        return taxRate;
+    }
+
+    public void setTaxRate(float taxRate) {
+        this.taxRate = taxRate;
+    }
+
+    public float getCrimeRate() {
+        return crimeRate;
+    }
+
+    public void setCrimeRate(float crimeRate) {
+        this.crimeRate = crimeRate;
+    }
+
+    public float getFoodSecurity() {
+        return foodSecurity;
+    }
+
+    public void setFoodSecurity(float foodSecurity) {
+        this.foodSecurity = foodSecurity;
+    }
+
+    public float getJobSecurity() {
+        return jobSecurity;
+    }
+
+    public void setJobSecurity(float jobSecurity) {
+        this.jobSecurity = jobSecurity;
+    }
+
+    public float getLandArea() {
+        return landArea;
+    }
+
+    public void setLandArea(float landArea) {
+        this.landArea = landArea;
+    }
+
+    public float getHappiness() {
+        return happiness;
+    }
+
+    public void setHappiness(float happiness) {
+        this.happiness = happiness;
+    }
+
+    public float getClimateChange() {
+        return climateChange;
+    }
+
+    public void setClimateChange(float climateChange) {
+        this.climateChange = climateChange;
+    }
+    
+    
+    
     public Island(float difficulty) 
     {
         crimeRate = 0.2f * difficulty;
