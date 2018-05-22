@@ -13,14 +13,14 @@ import java.util.List;
  * @author 12nwoodruff
  */
 public class ExodusData {
-    float difficulty;
-    Island[] islands = new Island[3];
-    RocketBase base;
-    int worldPopulation;
-    float worldTime;
-    float worldEndTime;
-    float climateChange;
-    float yearLength;
+    private float difficulty;
+    private Island[] islands = new Island[3];
+    private RocketBase base;
+    private int worldPopulation;
+    private float worldTime;
+    private float worldEndTime;
+    private float climateChange;
+    private float yearLength;
     List<String[]> history = new ArrayList<String[]>();
 
     public float getDifficulty() {
@@ -103,7 +103,7 @@ public class ExodusData {
         for(int i = 0; i < 3; i++)
         {
             islands[i] = new Island(difficulty);
-            worldPopulation += islands[i].population;
+            worldPopulation += islands[i].getPopulation();
         }
         base  = new RocketBase(difficulty);
         worldTime = 0;
@@ -120,15 +120,15 @@ public class ExodusData {
         {
             islands[i].collectTax();
             islands[i].updatePopulation();
-            islands[i].climateChange = climateChange;
+            islands[i].setClimateChange(climateChange);;
         }
         worldTime++;
     }
     public void movePopulation(int fromIslandIndex, int toIslandIndex, int size)
     {
-        islands[fromIslandIndex].population -= size;
-        islands[toIslandIndex].population += size;
-        islands[fromIslandIndex].pay(10 / islands[fromIslandIndex].gdpPerCapita);
+        islands[fromIslandIndex].changePopulation(-size);
+        islands[toIslandIndex].changePopulation(size);
+        islands[fromIslandIndex].pay(10 / islands[fromIslandIndex].getGdpPerCapita());
     }
     void printYearlySummary() //Just for csv data analysis
     {
@@ -139,16 +139,16 @@ public class ExodusData {
         historicEntry[3] = String.valueOf(climateChange);
         for(int i = 0; i < islands.length; i++)
         {
-            historicEntry[4+(i * 10)] = String.valueOf(islands[i].population);
-            historicEntry[5+(i * 10)] = String.valueOf(islands[i].money);
-            historicEntry[6+(i * 10)] = String.valueOf(islands[i].gdpPerCapita);
-            historicEntry[7+(i * 10)] = String.valueOf(islands[i].taxRate);
-            historicEntry[8+(i * 10)] = String.valueOf(islands[i].crimeRate);
-            historicEntry[9+(i * 10)] = String.valueOf(islands[i].foodSecurity);
-            historicEntry[10+(i * 10)] = String.valueOf(islands[i].jobSecurity);
-            historicEntry[11+(i * 10)] = String.valueOf(islands[i].landArea);
-            historicEntry[12+(i * 10)] = String.valueOf(islands[i].happiness);
-            historicEntry[13+(i * 10)] = String.valueOf(islands[i].climateChange);
+            historicEntry[4+(i * 10)] = String.valueOf(islands[i].getPopulation());
+            historicEntry[5+(i * 10)] = String.valueOf(islands[i].getMoney());
+            historicEntry[6+(i * 10)] = String.valueOf(islands[i].getGdpPerCapita());
+            historicEntry[7+(i * 10)] = String.valueOf(islands[i].getTaxRate());
+            historicEntry[8+(i * 10)] = String.valueOf(islands[i].getCrimeRate());
+            historicEntry[9+(i * 10)] = String.valueOf(islands[i].getFoodSecurity());
+            historicEntry[10+(i * 10)] = String.valueOf(islands[i].getJobSecurity());
+            historicEntry[11+(i * 10)] = String.valueOf(islands[i].getLandArea());
+            historicEntry[12+(i * 10)] = String.valueOf(islands[i].getHappiness());
+            historicEntry[13+(i * 10)] = String.valueOf(islands[i].getClimateChange());
         }
         history.add(historicEntry);
     }
