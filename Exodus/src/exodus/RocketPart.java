@@ -21,6 +21,8 @@ public abstract class RocketPart{
     protected Image bottomPartIcon;
     protected boolean isBottomPart;
     
+    public abstract boolean isEngine();
+    
     public void drawPart(Graphics g, int x, int y,JFrame jf){
         if(isBottomPart){
             g.drawImage(bottomPartIcon, x, y, jf);
@@ -28,6 +30,7 @@ public abstract class RocketPart{
             g.drawImage(icon, x, y, jf);
         }
     }
+    
     public int getHeight(JFrame jf){
         if(isBottomPart){
             return bottomPartIcon.getHeight(jf);

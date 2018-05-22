@@ -9,12 +9,6 @@ package exodus;
  *
  * @author 12sdauncey
  */
-public class FuelTank extends RocketPart{
+public class PartAddingException extends Exception{
     
-    protected int fuelCapacity;
-
-    @Override
-    public boolean isEngine() {
-        return false;
-    }    
 }
