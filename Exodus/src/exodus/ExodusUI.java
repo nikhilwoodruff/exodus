@@ -108,14 +108,14 @@ public class ExodusUI {
             public void actionPerformed(ActionEvent e) {
                 if(screen == 0)
                 {
-                    jobs.add(Animation.globalAnimation(world, 0, 1080, 1));
-                    jobs.add(Animation.globalAnimation(hq, 0, 0, 1));
+                    jobs.add(Animation.globalAnimation(world, 0, 1080, 0.5f));
+                    jobs.add(Animation.globalAnimation(hq, 0, 0, 0.5f));
                     screen = 1;
                 }
                 else if(screen == 1)
                 {
-                    jobs.add(Animation.globalAnimation(hq, 0, 1080, 1));
-                    jobs.add(Animation.globalAnimation(world, 0, 0, 1));
+                    jobs.add(Animation.globalAnimation(hq, 0, 1080, 0.5f));
+                    jobs.add(Animation.globalAnimation(world, 0, 0, 0.5f));
                     screen = 0;
                 }
             }
