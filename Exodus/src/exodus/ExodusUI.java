@@ -24,6 +24,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 /**
  *
@@ -34,12 +36,23 @@ public class ExodusUI {
         ExodusUI ui = new ExodusUI();
     }*/
     int islandSelected;
+    int screen;
     List<Animation> jobs = new ArrayList<Animation>();
     public ExodusUI()
     {
+        screen = 0;
         islandSelected = 0;
         JFrame jf = new JFrame();
         jf.getContentPane().setBackground(new Color(55, 130, 200));
+        JPanel world = new JPanel();
+        world.setLayout(null);
+        world.setSize(1920, 1080);
+        world.setLocation(0, 0);
+        JPanel hq = new JPanel();
+        hq.setLayout(null);
+        hq.setSize(1920, 1080);
+        hq.setLocation(0, 1080);
+        hq.setBackground(Color.red);
         JLabel localMenu = createLabel(0, 600, 400, 480, Color.GRAY, null, false);
         JLabel worldMenu = createLabel(1520, 600, 400, 480, Color.GRAY, null, false);
         List<JLabel> islands = new ArrayList<JLabel>();
@@ -49,10 +62,12 @@ public class ExodusUI {
         islands.add(island1);
         islands.add(island2);
         islands.add(island3);
-        JLabel localHeaders = createLabel(50, 650, 150, 400, null, "<html>Island:<br>Population:<br>Money:<br>GDP Per Capita:<br>Tax Rate:<br>Crime Rate:<br>Food Security:<br>Job Security:<br>Land Area:<br>Happiness:</html>", true);
-        JLabel localText = createLabel(200, 650, 150, 400, null, null, true);
-        JLabel worldHeaders = createLabel(1570, 700, 150, 400, null, "<html>Population:<br>Time:<br>Climate Change:</html>", true);
-        JLabel worldText = createLabel(1720, 700, 150, 400, null, null, true);
+        JLabel localHeaders = createLabel(25, 650, 175, 400, null, "<html>Island:<br>Population:<br>Money:<br>GDP Per Capita:<br>Tax Rate:<br>Crime Rate:<br>Food Security:<br>Job Security:<br>Land Area:<br>Happiness:</html>", true);
+        localHeaders.setFont(new Font("Courier New", Font.PLAIN, 12));
+        JLabel localText = createLabel(200, 650, 175, 400, null, null, true);
+        JLabel worldHeaders = createLabel(1545, 700, 175, 400, null, "<html>Population:<br>Time:<br>Climate Change:</html>", true);
+        worldHeaders.setFont(new Font("Courier New", Font.PLAIN, 12));
+        JLabel worldText = createLabel(1720, 700, 175, 400, null, null, true);
         
         for(JLabel island : islands) //Event listeners for mouse hover, click
         {
@@ -86,7 +101,25 @@ public class ExodusUI {
             };
             island.addMouseListener(ml);
         }
-        
+        JButton switchView = createButton(0, 0, 100, 50, "Switch");
+        switchView.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(screen == 0)
+                {
+                    jobs.add(Animation.globalAnimation(world, 0, 1080, 1));
+                    jobs.add(Animation.globalAnimation(hq, 0, 0, 1));
+                    screen = 1;
+                }
+                else if(screen == 1)
+                {
+                    jobs.add(Animation.globalAnimation(hq, 0, 1080, 1));
+                    jobs.add(Animation.globalAnimation(world, 0, 0, 1));
+                    screen = 0;
+                }
+            }
+            
+        });
         JButton exit = createButton(1820, 0, 100, 50, "Exit");
         exit.addActionListener(new ActionListener() {
             @Override
@@ -98,23 +131,20 @@ public class ExodusUI {
         
         JLabel background = createLabel(0, 0, 1920, 1080, readImage("ocean.png", 1920, 1080), null, false);
         
-        jobs.add(Animation.globalAnimation(exit, 500, 500, 1));
-        jobs.add(Animation.localAnimation(exit, 200, -200, 1));
-        jobs.add(Animation.globalAnimation(exit, 0, 0, 1));
-        jobs.add(Animation.localAnimation(exit, 50, 50, 0.5f));
-        
         jf.add(exit);
-        jf.add(worldText);
-        jf.add(worldHeaders);
-        jf.add(localHeaders);
-        jf.add(localText);
-        jf.add(localMenu);
-        jf.add(worldMenu);
-        jf.add(island1);
-        jf.add(island2);
-        jf.add(island3);
-        jf.add(background);
-        
+        jf.add(switchView);
+        jf.add(world);
+        world.add(worldText);
+        world.add(worldHeaders);
+        world.add(localHeaders);
+        world.add(localText);
+        world.add(localMenu);
+        world.add(worldMenu);
+        world.add(island1);
+        world.add(island2);
+        world.add(island3);
+        world.add(background);
+        jf.add(hq);
         jf.setSize(1920, 1080);
         jf.setLayout(null);
         jf.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -215,7 +245,8 @@ public class ExodusUI {
     {
         JLabel label = new JLabel();
         label.setVerticalTextPosition(JLabel.CENTER);
-        label.setFont(new Font("Courier New", Font.PLAIN, 24));
+        label.setVerticalAlignment(SwingConstants.TOP);
+        label.setFont(new Font("Courier New", Font.BOLD, 24));
         label.setText(text);
         label.setLocation(x, y);
         label.setSize(width, height);
