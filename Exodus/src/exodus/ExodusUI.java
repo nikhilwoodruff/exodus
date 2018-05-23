@@ -6,16 +6,20 @@
 package exodus;
 
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -30,24 +34,25 @@ public class ExodusUI {
         ExodusUI ui = new ExodusUI();
     }*/
     int islandSelected;
+    List<Animation> jobs = new ArrayList<Animation>();
     public ExodusUI()
     {
         islandSelected = 0;
         JFrame jf = new JFrame();
         jf.getContentPane().setBackground(new Color(55, 130, 200));
-        JLabel localMenu = createLabel(0, 600, 400, 480, Color.GRAY, null);
-        JLabel worldMenu = createLabel(1520, 600, 400, 480, Color.GRAY, null);
+        JLabel localMenu = createLabel(0, 600, 400, 480, Color.GRAY, null, false);
+        JLabel worldMenu = createLabel(1520, 600, 400, 480, Color.GRAY, null, false);
         List<JLabel> islands = new ArrayList<JLabel>();
-        JLabel island1 = createLabel(175, 150, 450, 450, Color.GREEN, null);
-        JLabel island2 = createLabel(1100, 75, 450, 450, Color.GREEN, null);
-        JLabel island3 = createLabel(800, 500, 450, 450, Color.GREEN, null);
+        JLabel island1 = createLabel(175, 150, 450, 450, readImage("island1.png", 450, 450), null, true);
+        JLabel island2 = createLabel(1100, 75, 450, 450, readImage("island2.png", 450, 450), null, true);
+        JLabel island3 = createLabel(800, 500, 450, 450, readImage("island3.png", 450, 450), null, true);
         islands.add(island1);
         islands.add(island2);
         islands.add(island3);
-        JLabel localHeaders = createLabel(50, 650, 150, 250, null, "<html>Island:<br>Population:<br>Money:<br>GDP Per Capita:<br>Tax Rate:<br>Crime Rate:<br>Food Security:<br>Job Security:<br>Land Area:<br>Happiness:</html>");
-        JLabel localText = createLabel(200, 650, 150, 250, null, null);
-        JLabel worldHeaders = createLabel(1570, 700, 150, 250, null, "<html>Population:<br>Time:<br>Climate Change:</html>");
-        JLabel worldText = createLabel(1720, 700, 150, 250, null, null);
+        JLabel localHeaders = createLabel(50, 650, 150, 400, null, "<html>Island:<br>Population:<br>Money:<br>GDP Per Capita:<br>Tax Rate:<br>Crime Rate:<br>Food Security:<br>Job Security:<br>Land Area:<br>Happiness:</html>", true);
+        JLabel localText = createLabel(200, 650, 150, 400, null, null, true);
+        JLabel worldHeaders = createLabel(1570, 700, 150, 400, null, "<html>Population:<br>Time:<br>Climate Change:</html>", true);
+        JLabel worldText = createLabel(1720, 700, 150, 400, null, null, true);
         
         for(JLabel island : islands) //Event listeners for mouse hover, click
         {
@@ -90,6 +95,14 @@ public class ExodusUI {
             }
             
         });
+        
+        JLabel background = createLabel(0, 0, 1920, 1080, readImage("ocean.png", 1920, 1080), null, false);
+        
+        jobs.add(Animation.globalAnimation(exit, 500, 500, 1));
+        jobs.add(Animation.localAnimation(exit, 200, -200, 1));
+        jobs.add(Animation.globalAnimation(exit, 0, 0, 1));
+        jobs.add(Animation.localAnimation(exit, 50, 50, 0.5f));
+        
         jf.add(exit);
         jf.add(worldText);
         jf.add(worldHeaders);
@@ -100,6 +113,7 @@ public class ExodusUI {
         jf.add(island1);
         jf.add(island2);
         jf.add(island3);
+        jf.add(background);
         
         jf.setSize(1920, 1080);
         jf.setLayout(null);
@@ -110,6 +124,37 @@ public class ExodusUI {
         jf.setVisible(true);
         
         ExodusData game = new ExodusData(0.5f, 2);
+        
+        ScheduledExecutorService animation = Executors.newSingleThreadScheduledExecutor();
+        animation.scheduleAtFixedRate(() -> {
+            try
+            {
+                if(jobs.size() > 0)
+                {
+                    Animation nextInQueue = jobs.get(0);
+                    int newX = nextInQueue.calculateLocation()[0];
+                    int newY = nextInQueue.calculateLocation()[1];
+                    nextInQueue.object.setLocation(newX, newY);
+                    int[] currentLocation = new int[] {nextInQueue.object.getLocation().x, nextInQueue.object.getLocation().y};
+                    if(currentLocation[0] == nextInQueue.targetLocation[0] && currentLocation[1] == nextInQueue.targetLocation[1])
+                    {
+                        jobs.remove(0);
+                        if(jobs.size() > 0)
+                        {
+                            Animation next = jobs.get(0);
+                            next.startTime = System.currentTimeMillis();
+                            next.startLocation = new int[] {next.object.getLocation().x, next.object.getLocation().y};
+                            jobs.set(0, next);
+                        }
+                    }
+                }
+            }
+            catch(Exception e)
+            {
+                e.printStackTrace();
+            }
+        }, 0, 1, TimeUnit.NANOSECONDS);
+        
         ScheduledExecutorService gameClock = Executors.newSingleThreadScheduledExecutor();
         gameClock.scheduleAtFixedRate(() -> {
             try
@@ -154,14 +199,28 @@ public class ExodusUI {
         
     }
     
-    public JLabel createLabel(int x, int y, int width, int height, Object background, String text)
+    public ImageIcon readImage(String fileName, int width, int height) {
+        //File must be in /Resources/!
+        BufferedImage image = null;
+        try {
+            image = ImageIO.read((Exodus.class.getResourceAsStream("/Resources/" + fileName)));
+        } catch (Exception e) {
+//            System.out.println(e);
+        }
+        Image sImage = image.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        return new ImageIcon(sImage);
+    }
+    
+    public JLabel createLabel(int x, int y, int width, int height, Object background, String text, boolean transparent)
     {
         JLabel label = new JLabel();
+        label.setVerticalTextPosition(JLabel.CENTER);
+        label.setFont(new Font("Courier New", Font.PLAIN, 24));
         label.setText(text);
         label.setLocation(x, y);
         label.setSize(width, height);
         label.setVisible(true);
-        label.setOpaque(true);
+        label.setOpaque(!transparent);
         if(background != null)
         {
             if(background.getClass() == Color.class)

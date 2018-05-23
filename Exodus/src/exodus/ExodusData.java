@@ -114,7 +114,7 @@ public class ExodusData {
     public void nextYear()
     {
         printYearlySummary();
-        climateChange = worldTime / worldEndTime;
+        climateChange += Math.random() * 0.01f - 0.005f;
         //occurs every year
         for(int i = 0; i < 3; i++)
         {
@@ -123,6 +123,7 @@ public class ExodusData {
             islands[i].setClimateChange(climateChange);;
         }
         worldTime++;
+        climateChange += 1 / worldEndTime;
     }
     public void movePopulation(int fromIslandIndex, int toIslandIndex, int size)
     {
