@@ -32,7 +32,7 @@ public class Animation {
         {
             progress = 1;
         }
-        progress = easeInOut(progress, 10);
+        progress = easeInOut(progress, 4);
         int x;
         int y;
         x = (int) Math.round(startLocation[0] + (targetLocation[0] - startLocation[0]) * progress);

@@ -44,6 +44,7 @@ public class ExodusUI {
         islandSelected = 0;
         JFrame jf = new JFrame();
         jf.getContentPane().setBackground(new Color(55, 130, 200));
+        JLabel worldBackground = createLabel(0, 0, 1920, 1080, readImage("stars.png", 1920, 1080), null, false);
         JPanel world = new JPanel();
         world.setLayout(null);
         world.setSize(1920, 1080);
@@ -145,6 +146,7 @@ public class ExodusUI {
         world.add(island3);
         world.add(background);
         jf.add(hq);
+        jf.add(worldBackground);
         jf.setSize(1920, 1080);
         jf.setLayout(null);
         jf.setExtendedState(JFrame.MAXIMIZED_BOTH);
