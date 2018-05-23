@@ -166,9 +166,17 @@ public class ExodusUI {
                 if(jobs.size() > 0)
                 {
                     Animation nextInQueue = jobs.get(0);
-                    int newX = nextInQueue.calculateLocation()[0];
-                    int newY = nextInQueue.calculateLocation()[1];
-                    nextInQueue.object.setLocation(newX, newY);
+                    try
+                    {
+                        int newX = nextInQueue.calculateLocation()[0];
+                        int newY = nextInQueue.calculateLocation()[1];
+                        nextInQueue.object.setLocation(newX, newY);
+                    }
+                    catch(Exception e)
+                    {
+                        System.out.println("probably a null pointer");
+                    }
+                    
                     int[] currentLocation = new int[] {nextInQueue.object.getLocation().x, nextInQueue.object.getLocation().y};
                     if(currentLocation[0] == nextInQueue.targetLocation[0] && currentLocation[1] == nextInQueue.targetLocation[1])
                     {
@@ -240,7 +248,7 @@ public class ExodusUI {
         try {
             image = ImageIO.read((Exodus.class.getResourceAsStream("/Resources/" + fileName)));
         } catch (Exception e) {
-//            System.out.println(e);
+            
         }
         Image sImage = image.getScaledInstance(width, height, Image.SCALE_SMOOTH);
         return new ImageIcon(sImage);
