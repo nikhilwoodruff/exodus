@@ -53,7 +53,8 @@ public class ExodusUI {
         hq.setLayout(null);
         hq.setSize(1920, 1080);
         hq.setLocation(0, 1080);
-        hq.setBackground(Color.red);
+        JLabel hqBackground = createLabel(0, 0, 1920, 1080, readImage("hqBackground.png", 1920, 1080), null, false);
+        
         JLabel localMenu = createLabel(0, 600, 400, 480, Color.GRAY, null, false);
         JLabel worldMenu = createLabel(1520, 600, 400, 480, Color.GRAY, null, false);
         List<JLabel> islands = new ArrayList<JLabel>();
@@ -135,6 +136,7 @@ public class ExodusUI {
         jf.add(exit);
         jf.add(switchView);
         jf.add(world);
+        hq.add(hqBackground);
         world.add(worldText);
         world.add(worldHeaders);
         world.add(localHeaders);
@@ -184,6 +186,7 @@ public class ExodusUI {
             catch(Exception e)
             {
                 e.printStackTrace();
+                System.out.println(e.getMessage());
             }
         }, 0, 1, TimeUnit.NANOSECONDS);
         
