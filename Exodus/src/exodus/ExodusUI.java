@@ -58,9 +58,9 @@ public class ExodusUI {
         JLabel localMenu = createLabel(0, 600, 400, 480, Color.GRAY, null, false);
         JLabel worldMenu = createLabel(1520, 600, 400, 480, Color.GRAY, null, false);
         List<JLabel> islands = new ArrayList<JLabel>();
-        JLabel island1 = createLabel(175, 150, 450, 450, readImage("island1.png", 450, 450), null, true);
-        JLabel island2 = createLabel(1100, 75, 450, 450, readImage("island2.png", 450, 450), null, true);
-        JLabel island3 = createLabel(800, 500, 450, 450, readImage("island3.png", 450, 450), null, true);
+        JLabel island1 = createLabel(175, 150, 450, 450, Color.green, null, true);
+        JLabel island2 = createLabel(1100, 75, 450, 450, Color.green, null, true);
+        JLabel island3 = createLabel(800, 500, 450, 450, Color.green, null, true);
         islands.add(island1);
         islands.add(island2);
         islands.add(island3);
