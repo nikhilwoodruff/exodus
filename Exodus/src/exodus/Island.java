@@ -17,10 +17,28 @@ public class Island {
     private float crimeRate;
     private float foodSecurity;
     private float jobSecurity;
+    private float energySecurity;
     private float landArea;
     private float happiness;
     private float climateChange;
+    private float budget;
 
+    public float getBudget() {
+        return budget;
+    }
+
+    public void setBudget(float budget) {
+        this.budget = budget;
+    }
+    
+    public float getEnergySecurity() {
+        return energySecurity;
+    }
+
+    public void setEnergySecurity(float energySecurity) {
+        this.energySecurity = energySecurity;
+    }
+    
     public int getPopulation() {
         return population;
     }
@@ -105,8 +123,6 @@ public class Island {
         this.climateChange = climateChange;
     }
     
-    
-    
     public Island(float difficulty) 
     {
         crimeRate = 0.2f * difficulty;
@@ -118,6 +134,7 @@ public class Island {
         foodSecurity = 0.85f;
         jobSecurity = 0.95f;
         happiness = 0.75f;
+        budget = gdpPerCapita * taxRate * population * 0.8f;
     }
     public void collectTax()
     {
@@ -141,9 +158,9 @@ public class Island {
     }
     public void updatePopulation()
     {
-        crimeRate += 0.001f * (1 - jobSecurity) * (1 - foodSecurity) * (population / landArea) * (0.5 + Math.random()) * (1 - crimeRate);
-        gdpPerCapita *= 1 - (crimeRate * 1f); 
-        happiness *= 0.1 + (1 - crimeRate);
+        crimeRate += 0.015f * (1 - jobSecurity) * (1 - foodSecurity) * (population / landArea) * (0.5 + Math.random()) * (1 - crimeRate);
+        gdpPerCapita *= 1.08 - crimeRate; 
+        happiness *= 1.15 - crimeRate;
         if(happiness > 1)
         {
             happiness = 1;
@@ -161,6 +178,7 @@ public class Island {
         {
             triggerDisaster(0);
         }
+        money -= budget;
     }
     public void upgradeFarms()
     {

@@ -21,6 +21,7 @@ public class ExodusData {
     private float worldEndTime;
     private float climateChange;
     private float yearLength;
+    
     List<String[]> history = new ArrayList<String[]>();
 
     public float getDifficulty() {
@@ -120,7 +121,7 @@ public class ExodusData {
         {
             islands[i].collectTax();
             islands[i].updatePopulation();
-            islands[i].setClimateChange(climateChange);;
+            islands[i].setClimateChange(climateChange);
         }
         worldTime++;
         climateChange += 1 / worldEndTime;

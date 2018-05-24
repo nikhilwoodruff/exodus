@@ -54,13 +54,12 @@ public class ExodusUI {
         hq.setSize(1920, 1080);
         hq.setLocation(0, 1080);
         JLabel hqBackground = createLabel(0, 0, 1920, 1080, readImage("hqBackground.png", 1920, 1080), null, false);
-        
         JLabel localMenu = createLabel(0, 600, 400, 480, Color.GRAY, null, false);
         JLabel worldMenu = createLabel(1520, 600, 400, 480, Color.GRAY, null, false);
         List<JLabel> islands = new ArrayList<JLabel>();
-        JLabel island1 = createLabel(175, 150, 450, 450, Color.green, null, true);
-        JLabel island2 = createLabel(1100, 75, 450, 450, Color.green, null, true);
-        JLabel island3 = createLabel(800, 500, 450, 450, Color.green, null, true);
+        JLabel island1 = createLabel(175, 150, 450, 450, Color.green, null, false);
+        JLabel island2 = createLabel(1100, 75, 450, 450, Color.green, null, false);
+        JLabel island3 = createLabel(800, 500, 450, 450, Color.green, null, false);
         islands.add(island1);
         islands.add(island2);
         islands.add(island3);
@@ -157,8 +156,23 @@ public class ExodusUI {
         jf.revalidate();
         jf.setVisible(true);
         
-        ExodusData game = new ExodusData(0.5f, 2);
         
+        
+        ExodusData game = new ExodusData(0.5f, 2);
+        for(int i = 0; i < 250; i++) //Just for looking at game data
+        {
+            game.nextYear();
+        }
+        String csvFile = "";
+        for(int i = 0; i < 250; i++)
+        {
+            for(int j = 0; j < 34; j++)
+            {
+                csvFile += game.history.get(i)[j] + ", ";
+            }
+            csvFile += "\n";
+        }
+        System.out.println(csvFile);
         ScheduledExecutorService animation = Executors.newSingleThreadScheduledExecutor();
         animation.scheduleAtFixedRate(() -> {
             try
