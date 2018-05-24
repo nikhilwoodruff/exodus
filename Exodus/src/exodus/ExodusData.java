@@ -115,7 +115,7 @@ public class ExodusData {
     public void nextYear()
     {
         printYearlySummary();
-        climateChange += Math.random() * 0.01f - 0.005f;
+        climateChange += 0.01f * (Math.random() - 0.5);
         //occurs every year
         for(int i = 0; i < 3; i++)
         {

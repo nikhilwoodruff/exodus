@@ -32,9 +32,7 @@ import javax.swing.SwingConstants;
  * @author 12nwoodruff
  */
 public class ExodusUI {
-    /*public static void main(String[] args) {
-        ExodusUI ui = new ExodusUI();
-    }*/
+    
     int islandSelected;
     int screen;
     List<Animation> jobs = new ArrayList<Animation>();
@@ -156,10 +154,8 @@ public class ExodusUI {
         jf.revalidate();
         jf.setVisible(true);
         
-        
-        
         ExodusData game = new ExodusData(0.5f, 2);
-        for(int i = 0; i < 250; i++) //Just for looking at game data
+        /*for(int i = 0; i < 250; i++) //Just for looking at game data
         {
             game.nextYear();
         }
@@ -172,7 +168,7 @@ public class ExodusUI {
             }
             csvFile += "\n";
         }
-        System.out.println(csvFile);
+        System.out.println(csvFile);*/
         ScheduledExecutorService animation = Executors.newSingleThreadScheduledExecutor();
         animation.scheduleAtFixedRate(() -> {
             try
@@ -189,6 +185,7 @@ public class ExodusUI {
                     catch(Exception e)
                     {
                         System.out.println("probably a null pointer");
+                        System.out.println("next in queue: " + nextInQueue);
                     }
                     
                     int[] currentLocation = new int[] {nextInQueue.object.getLocation().x, nextInQueue.object.getLocation().y};
@@ -209,6 +206,7 @@ public class ExodusUI {
             {
                 e.printStackTrace();
                 System.out.println(e.getMessage());
+                System.out.println(e.toString());
             }
         }, 0, 1, TimeUnit.NANOSECONDS);
         
