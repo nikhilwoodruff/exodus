@@ -7,6 +7,7 @@ package exodus;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -167,11 +168,15 @@ public class ExodusUI {
                 if(budgetOpen)
                 {
                     jobs.add(Animation.globalAnimation(editBudget, 750, 1080, 1));
-                    game.getIslands()[islandSelected].setBudget(new float[] {publicServices.getValue(), greenEnergy.getValue(), greenDefenses.getValue(), military.getValue()});
+                    game.getIslands()[islandSelected].setBudget(new float[] {(float) publicServices.getValue() / 100,(float) greenEnergy.getValue() / 100,(float) greenDefenses.getValue() / 100,(float) military.getValue() / 100});
                     budgetOpen = false;
                 }
                 else
                 {
+                    publicServices.setValue(Math.round(game.getIslands()[islandSelected].getBudget()[0] * 100));
+                    greenEnergy.setValue(Math.round(game.getIslands()[islandSelected].getBudget()[1] * 100));
+                    greenDefenses.setValue(Math.round(game.getIslands()[islandSelected].getBudget()[2] * 100));
+                    military.setValue(Math.round(game.getIslands()[islandSelected].getBudget()[3] * 100));
                     jobs.add(Animation.globalAnimation(editBudget, 750, 350, 1));
                     budgetOpen = true;
                 }
@@ -179,6 +184,13 @@ public class ExodusUI {
             
         });
         world.add(editBudgetButton);
+        JLabel rocketLabel = createLabel(50, 50, 400, 900, null, "Rocket", true);
+        BufferedImage img = new BufferedImage(400, 900, BufferedImage.TYPE_INT_RGB);
+        Graphics g = img.getGraphics();
+        Rocket rocket = new Rocket();
+        rocket.drawRocket(g, 0, 0, jf);
+        rocketLabel.setIcon(new ImageIcon(img));
+        hq.add(rocketLabel);
         jf.add(editBudget);
         jf.add(exit);
         jf.add(switchView);
