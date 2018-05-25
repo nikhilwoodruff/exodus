@@ -131,19 +131,32 @@ public class ExodusUI {
         
         JLabel background = createLabel(0, 0, 1920, 1080, readImage("ocean.png", 1920, 1080), null, false);
         JPanel editBudget = new JPanel();
+        editBudget.setLayout(null);
         editBudget.setSize(500, 400);
         editBudget.setLocation(750, 1080);
         JSlider publicServices = new JSlider();
+        publicServices.setLocation(250, 25);
+        publicServices.setSize(200, 25);
         JSlider greenEnergy = new JSlider();
+        greenEnergy.setLocation(250, 125);
+        greenEnergy.setSize(200, 25);
         JSlider greenDefenses = new JSlider();
+        greenDefenses.setLocation(250, 225);
+        greenDefenses.setSize(200, 25);
         JSlider military = new JSlider();
-        editBudget.add(createLabel(0, 0, 100, 50, null, "Public Services", true));
+        military.setLocation(250, 325);
+        military.setSize(200, 25);
+        JLabel[] sliderLabels = new JLabel[4];
+        String[] sliderText = new String[] {"Public Services", "Greeen Energy", "Disaster Insurance", "Military Spending"};
+        for(int i = 0; i < 4; i++)
+        {
+            sliderLabels[i] = createLabel(25, 25 + 100 * i, 200, 50, null, sliderText[i], true);
+            sliderLabels[i].setFont(new Font("Courier New", Font.PLAIN, 15));
+            editBudget.add(sliderLabels[i]);
+        }
         editBudget.add(publicServices);
-        editBudget.add(createLabel(0, 0, 100, 50, null, "Green Energy", true));
         editBudget.add(greenEnergy);
-        editBudget.add(createLabel(0, 0, 100, 50, null, "Disaster Protection", true));
         editBudget.add(greenDefenses);
-        editBudget.add(createLabel(0, 0, 100, 50, null, "Military Spending", true));
         editBudget.add(military);
         JLabel budgetBackground = createLabel(0, 0, 500, 250, Color.red, null, true);
         editBudget.add(budgetBackground);
