@@ -15,12 +15,16 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -180,6 +184,7 @@ public class ExodusUI {
                     jobs.add(Animation.globalAnimation(editBudget, 750, 350, 1));
                     budgetOpen = true;
                 }
+                HandleSound("click.wav");
             }
             
         });
@@ -358,6 +363,18 @@ public class ExodusUI {
         button.setLocation(x, y);
         button.setSize(width, height);
         return button;
+    }
+    
+    public void HandleSound(InputStream file) {
+        try {
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(Exodus.class.getResourceAsStream("/Resources/" + file));
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            clip.start();
+            Thread.sleep(100);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
     
     public static void main(String[] args) {
