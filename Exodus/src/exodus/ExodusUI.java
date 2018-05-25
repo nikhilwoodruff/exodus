@@ -65,9 +65,9 @@ public class ExodusUI {
         JLabel localMenu = createLabel(0, 600, 400, 480, Color.GRAY, null, false);
         JLabel worldMenu = createLabel(1520, 600, 400, 480, Color.GRAY, null, false);
         List<JLabel> islands = new ArrayList<JLabel>();
-        JLabel island1 = createLabel(175, 150, 450, 450, Color.green, null, false);
-        JLabel island2 = createLabel(1100, 75, 450, 450, Color.green, null, false);
-        JLabel island3 = createLabel(800, 500, 450, 450, Color.green, null, false);
+        JLabel island1 = createLabel(175, 150, 450, 450, readImage("island1.png", 450, 450), null, true);
+        JLabel island2 = createLabel(1100, 75, 450, 450, readImage("island2.png", 450, 450), null, true);
+        JLabel island3 = createLabel(800, 500, 450, 450, readImage("island3.png", 450, 450), null, true);
         islands.add(island1);
         islands.add(island2);
         islands.add(island3);
@@ -82,6 +82,7 @@ public class ExodusUI {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     islandSelected = index;
+                    HandleSound("click.wav");
                 }
 
                 @Override
@@ -96,7 +97,7 @@ public class ExodusUI {
 
                 @Override
                 public void mouseEntered(MouseEvent e) {
-                    
+                    HandleSound("hover.wav");
                 }
 
                 @Override
@@ -107,34 +108,18 @@ public class ExodusUI {
             island.addMouseListener(ml);
         }
         JButton switchView = createButton(0, 0, 100, 50, "Switch");
-        switchView.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(screen == 0)
-                {
-                    jobs.add(Animation.globalAnimation(world, 0, 1080, 0.5f));
-                    jobs.add(Animation.globalAnimation(hq, 0, 0, 0.5f));
-                    screen = 1;
-                }
-                else if(screen == 1)
-                {
-                    jobs.add(Animation.globalAnimation(hq, 0, 1080, 0.5f));
-                    jobs.add(Animation.globalAnimation(world, 0, 0, 0.5f));
-                    screen = 0;
-                }
-            }
-            
-        });
+        
         JButton exit = createButton(1820, 0, 100, 50, "Exit");
         exit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                HandleSound("click.wav");
                 jf.dispatchEvent(new WindowEvent(jf, WindowEvent.WINDOW_CLOSING));
             }
             
         });
         
-        JLabel background = createLabel(0, 0, 1920, 1080, readImage("ocean.png", 1920, 1080), null, false);
+        JLabel background = createLabel(0, 0, 1920, 1080, new Color(134, 190, 255), null, false);
         JPanel editBudget = new JPanel();
         editBudget.setLayout(null);
         editBudget.setSize(500, 400);
@@ -163,6 +148,30 @@ public class ExodusUI {
         editBudget.add(greenEnergy);
         editBudget.add(greenDefenses);
         editBudget.add(military);
+        switchView.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(budgetOpen)
+                {
+                    jobs.add(Animation.globalAnimation(editBudget, 750, 1080, 1));
+                    budgetOpen = false;
+                }
+                if(screen == 0)
+                {
+                    jobs.add(Animation.globalAnimation(world, 0, 1080, 0.5f));
+                    jobs.add(Animation.globalAnimation(hq, 0, 0, 0.5f));
+                    screen = 1;
+                }
+                else if(screen == 1)
+                {
+                    jobs.add(Animation.globalAnimation(hq, 0, 1080, 0.5f));
+                    jobs.add(Animation.globalAnimation(world, 0, 0, 0.5f));
+                    screen = 0;
+                }
+                HandleSound("click.wav");
+            }
+            
+        });
         JLabel budgetBackground = createLabel(0, 0, 500, 250, Color.red, null, true);
         editBudget.add(budgetBackground);
         JButton editBudgetButton = createButton(25, 825, 100, 50, "Edit Budget");
@@ -365,9 +374,9 @@ public class ExodusUI {
         return button;
     }
     
-    public void HandleSound(InputStream file) {
+    public void HandleSound(String fileName) {
         try {
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(Exodus.class.getResourceAsStream("/Resources/" + file));
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(Exodus.class.getResourceAsStream("/Resources/" + fileName));
             Clip clip = AudioSystem.getClip();
             clip.open(audioInputStream);
             clip.start();
