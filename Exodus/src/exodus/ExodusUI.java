@@ -65,7 +65,7 @@ public class ExodusUI {
         JLabel localMenu = createLabel(0, 600, 400, 480, Color.GRAY, null, false);
         JLabel worldMenu = createLabel(1520, 600, 400, 480, Color.GRAY, null, false);
         List<JLabel> islands = new ArrayList<JLabel>();
-        JLabel island1 = createLabel(175, 150, 450, 450, readImage("island1.png", 450, 450), null, true);
+        JLabel island1 = createLabel(175, 150, 450, 450, readImage("altIsland1.png", 450, 450), null, true);
         JLabel island2 = createLabel(1100, 75, 450, 450, readImage("island2.png", 450, 450), null, true);
         JLabel island3 = createLabel(800, 500, 450, 450, readImage("island3.png", 450, 450), null, true);
         islands.add(island1);
@@ -81,7 +81,15 @@ public class ExodusUI {
             {
                 @Override
                 public void mouseClicked(MouseEvent e) {
+                    for(int i = 0; i < 3; i++)
+                    {
+                        islands.get(i).setIcon(readImage("island" + (i + 1) + ".png", 450, 450));
+                    }
                     islandSelected = index;
+                    if(!budgetOpen)
+                    {
+                        island.setIcon(readImage("altIsland" + (index + 1) + ".png", 450, 450));
+                    }
                     HandleSound("click.wav");
                 }
 
@@ -97,12 +105,20 @@ public class ExodusUI {
 
                 @Override
                 public void mouseEntered(MouseEvent e) {
-                    HandleSound("hover.wav");
+                    
+                    if(!budgetOpen)
+                    {
+                        HandleSound("hover.wav");
+                        island.setIcon(readImage("altIsland" + (index + 1) + ".png", 450, 450));
+                    }
                 }
 
                 @Override
                 public void mouseExited(MouseEvent e) {
-                    
+                    if(index != islandSelected)
+                    {
+                        island.setIcon(readImage("island" + (index + 1) + ".png", 450, 450));
+                    }
                 }
             };
             island.addMouseListener(ml);
@@ -218,6 +234,7 @@ public class ExodusUI {
         world.add(island2);
         world.add(island3);
         world.add(background);
+        
         jf.add(hq);
         jf.add(worldBackground);
         jf.setSize(1920, 1080);
