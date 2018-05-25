@@ -42,11 +42,12 @@ public class ExodusUI {
     int islandSelected;
     int screen;
     boolean budgetOpen;
+    boolean investOpen;
     List<Animation> jobs = new ArrayList<Animation>();
     public ExodusUI()
     {
         ExodusData game = new ExodusData(0.5f, 2);
-        
+        investOpen = false;
         budgetOpen = false;
         screen = 0;
         islandSelected = 0;
@@ -73,7 +74,7 @@ public class ExodusUI {
         islands.add(island3);
         JLabel localText = createLabel(25, 650, 350, 150, null, null, false);
         JLabel worldText = createLabel(1545, 700, 350, 400, null, null, false);
-        
+        JLabel vignette = createLabel(0, 0, 1920, 1080, null, null, true);
         for(JLabel island : islands) //Event listeners for mouse hover, click
         {
             final int index = islands.indexOf(island);
@@ -81,16 +82,17 @@ public class ExodusUI {
             {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    for(int i = 0; i < 3; i++)
+                    if(!budgetOpen && !investOpen)
                     {
-                        islands.get(i).setIcon(readImage("island" + (i + 1) + ".png", 450, 450));
-                    }
-                    islandSelected = index;
-                    if(!budgetOpen)
-                    {
+                        for(int i = 0; i < 3; i++)
+                        {
+                            islands.get(i).setIcon(readImage("island" + (i + 1) + ".png", 450, 450));
+                        }
+                        islandSelected = index;
                         island.setIcon(readImage("altIsland" + (index + 1) + ".png", 450, 450));
+                        HandleSound("click.wav");
                     }
-                    HandleSound("click.wav");
+                    
                 }
 
                 @Override
@@ -106,7 +108,7 @@ public class ExodusUI {
                 @Override
                 public void mouseEntered(MouseEvent e) {
                     
-                    if(!budgetOpen)
+                    if(!budgetOpen && !investOpen)
                     {
                         HandleSound("hover.wav");
                         island.setIcon(readImage("altIsland" + (index + 1) + ".png", 450, 450));
@@ -115,10 +117,14 @@ public class ExodusUI {
 
                 @Override
                 public void mouseExited(MouseEvent e) {
-                    if(index != islandSelected)
+                    if(!budgetOpen && !investOpen)
                     {
-                        island.setIcon(readImage("island" + (index + 1) + ".png", 450, 450));
+                        if(index != islandSelected)
+                        {
+                            island.setIcon(readImage("island" + (index + 1) + ".png", 450, 450));
+                        }
                     }
+                    
                 }
             };
             island.addMouseListener(ml);
@@ -136,6 +142,7 @@ public class ExodusUI {
         });
         
         JLabel background = createLabel(0, 0, 1920, 1080, new Color(134, 190, 255), null, false);
+        
         JPanel editBudget = new JPanel();
         editBudget.setLayout(null);
         editBudget.setSize(500, 400);
@@ -160,6 +167,30 @@ public class ExodusUI {
             sliderLabels[i].setFont(new Font("Courier New", Font.PLAIN, 15));
             editBudget.add(sliderLabels[i]);
         }
+        
+        JPanel investPanel = new JPanel();
+        investPanel.setLayout(null);
+        investPanel.setSize(500, 400);
+        investPanel.setLocation(750, 1080);
+        JButton investButton = createButton(150, 825, 100, 50, "Invest");
+        investButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(investOpen)
+                {
+                    jobs.add(Animation.globalAnimation(investPanel, 750, 1080, 0.5f));
+                    investOpen = false;
+                }
+                else
+                {
+                    jobs.add(Animation.globalAnimation(investPanel, 750, 350, 0.5f));
+                    investOpen = true;
+                }
+                HandleSound("click.wav");
+            }
+            
+        });
+        
         editBudget.add(publicServices);
         editBudget.add(greenEnergy);
         editBudget.add(greenDefenses);
@@ -169,8 +200,13 @@ public class ExodusUI {
             public void actionPerformed(ActionEvent e) {
                 if(budgetOpen)
                 {
-                    jobs.add(Animation.globalAnimation(editBudget, 750, 1080, 1));
+                    jobs.add(Animation.globalAnimation(editBudget, 750, 1080, 0.5f));
                     budgetOpen = false;
+                }
+                if(investOpen)
+                {
+                    jobs.add(Animation.globalAnimation(investPanel, 750, 1080, 0.5f));
+                    budgetOpen = investOpen;
                 }
                 if(screen == 0)
                 {
@@ -196,7 +232,7 @@ public class ExodusUI {
             public void actionPerformed(ActionEvent e) {
                 if(budgetOpen)
                 {
-                    jobs.add(Animation.globalAnimation(editBudget, 750, 1080, 1));
+                    jobs.add(Animation.globalAnimation(editBudget, 750, 1080, 0.5f));
                     game.getIslands()[islandSelected].setBudget(new float[] {(float) publicServices.getValue() / 100,(float) greenEnergy.getValue() / 100,(float) greenDefenses.getValue() / 100,(float) military.getValue() / 100});
                     budgetOpen = false;
                 }
@@ -206,7 +242,7 @@ public class ExodusUI {
                     greenEnergy.setValue(Math.round(game.getIslands()[islandSelected].getBudget()[1] * 100));
                     greenDefenses.setValue(Math.round(game.getIslands()[islandSelected].getBudget()[2] * 100));
                     military.setValue(Math.round(game.getIslands()[islandSelected].getBudget()[3] * 100));
-                    jobs.add(Animation.globalAnimation(editBudget, 750, 350, 1));
+                    jobs.add(Animation.globalAnimation(editBudget, 750, 350, 0.5f));
                     budgetOpen = true;
                 }
                 HandleSound("click.wav");
@@ -214,6 +250,7 @@ public class ExodusUI {
             
         });
         world.add(editBudgetButton);
+        world.add(investButton);
         JLabel rocketLabel = createLabel(50, 50, 400, 900, null, "Rocket", true);
         BufferedImage img = new BufferedImage(400, 900, BufferedImage.TYPE_INT_RGB);
         Graphics g = img.getGraphics();
@@ -222,6 +259,7 @@ public class ExodusUI {
         rocketLabel.setIcon(new ImageIcon(img));
         hq.add(rocketLabel);
         jf.add(editBudget);
+        jf.add(investPanel);
         jf.add(exit);
         jf.add(switchView);
         jf.add(world);
@@ -230,6 +268,7 @@ public class ExodusUI {
         world.add(localText);
         world.add(localMenu);
         world.add(worldMenu);
+        world.add(vignette);
         world.add(island1);
         world.add(island2);
         world.add(island3);
@@ -311,6 +350,17 @@ public class ExodusUI {
                 local += "<br><i>Happiness:</i> " + game.getIslands()[islandSelected].getHappiness();
                 local += "<br><i>Land Area:</i> " + game.getIslands()[islandSelected].getLandArea() + "</html>";
                 localText.setText(local);
+                
+                if(investOpen || budgetOpen)
+                {
+                    vignette.setIcon(readImage("vignette.png", 1920, 1080));
+                    editBudget.setBackground(Color.WHITE);
+                    investPanel.setBackground(Color.WHITE);
+                }
+                else
+                {
+                    vignette.setIcon(null);
+                }
             }
             catch(Exception e)
             {
