@@ -12,6 +12,7 @@ import java.util.List;
  *
  * @author 12nwoodruff
  */
+
 public class ExodusData {
     private float difficulty;
     private Island[] islands = new Island[3];

@@ -21,13 +21,13 @@ public class Island {
     private float landArea;
     private float happiness;
     private float climateChange;
-    private float budget;
-
-    public float getBudget() {
+    private float[] budget;
+    
+    public float[] getBudget() {
         return budget;
     }
 
-    public void setBudget(float budget) {
+    public void setBudget(float[] budget) {
         this.budget = budget;
     }
     
@@ -134,7 +134,7 @@ public class Island {
         foodSecurity = 0.85f;
         jobSecurity = 0.95f;
         happiness = 0.75f;
-        budget = gdpPerCapita * taxRate * population * 0.8f;
+        budget = new float[] {0.25f, 0.25f, 0.25f, 0.25f};
     }
     public void collectTax()
     {
@@ -178,7 +178,12 @@ public class Island {
         {
             triggerDisaster(0);
         }
-        money -= budget;
+        float sum = 0;
+        for(int i = 0; i < 4; i++)
+        {
+            sum += budget[i];
+        }
+        money -= sum * gdpPerCapita * population * taxRate * 0.3f;
     }
     public void upgradeFarms()
     {

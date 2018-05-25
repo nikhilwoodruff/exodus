@@ -25,6 +25,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSlider;
 import javax.swing.SwingConstants;
 
 /**
@@ -35,9 +36,13 @@ public class ExodusUI {
     
     int islandSelected;
     int screen;
+    boolean budgetOpen;
     List<Animation> jobs = new ArrayList<Animation>();
     public ExodusUI()
     {
+        ExodusData game = new ExodusData(0.5f, 2);
+        
+        budgetOpen = false;
         screen = 0;
         islandSelected = 0;
         JFrame jf = new JFrame();
@@ -61,12 +66,8 @@ public class ExodusUI {
         islands.add(island1);
         islands.add(island2);
         islands.add(island3);
-        JLabel localHeaders = createLabel(25, 650, 175, 400, null, "<html>Island:<br>Population:<br>Money:<br>GDP Per Capita:<br>Tax Rate:<br>Crime Rate:<br>Food Security:<br>Job Security:<br>Land Area:<br>Happiness:</html>", true);
-        localHeaders.setFont(new Font("Courier New", Font.PLAIN, 12));
-        JLabel localText = createLabel(200, 650, 175, 400, null, null, true);
-        JLabel worldHeaders = createLabel(1545, 700, 175, 400, null, "<html>Population:<br>Time:<br>Climate Change:</html>", true);
-        worldHeaders.setFont(new Font("Courier New", Font.PLAIN, 12));
-        JLabel worldText = createLabel(1720, 700, 175, 400, null, null, true);
+        JLabel localText = createLabel(25, 650, 350, 150, null, null, false);
+        JLabel worldText = createLabel(1545, 700, 350, 400, null, null, false);
         
         for(JLabel island : islands) //Event listeners for mouse hover, click
         {
@@ -129,14 +130,48 @@ public class ExodusUI {
         });
         
         JLabel background = createLabel(0, 0, 1920, 1080, readImage("ocean.png", 1920, 1080), null, false);
-        
+        JPanel editBudget = new JPanel();
+        editBudget.setSize(500, 400);
+        editBudget.setLocation(750, 1080);
+        JSlider publicServices = new JSlider();
+        JSlider greenEnergy = new JSlider();
+        JSlider greenDefenses = new JSlider();
+        JSlider military = new JSlider();
+        editBudget.add(createLabel(0, 0, 100, 50, null, "Public Services", true));
+        editBudget.add(publicServices);
+        editBudget.add(createLabel(0, 0, 100, 50, null, "Green Energy", true));
+        editBudget.add(greenEnergy);
+        editBudget.add(createLabel(0, 0, 100, 50, null, "Disaster Protection", true));
+        editBudget.add(greenDefenses);
+        editBudget.add(createLabel(0, 0, 100, 50, null, "Military Spending", true));
+        editBudget.add(military);
+        JLabel budgetBackground = createLabel(0, 0, 500, 250, Color.red, null, true);
+        editBudget.add(budgetBackground);
+        JButton editBudgetButton = createButton(25, 825, 100, 50, "Edit Budget");
+        editBudgetButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(budgetOpen)
+                {
+                    jobs.add(Animation.globalAnimation(editBudget, 750, 1080, 1));
+                    game.getIslands()[islandSelected].setBudget(new float[] {publicServices.getValue(), greenEnergy.getValue(), greenDefenses.getValue(), military.getValue()});
+                    budgetOpen = false;
+                }
+                else
+                {
+                    jobs.add(Animation.globalAnimation(editBudget, 750, 350, 1));
+                    budgetOpen = true;
+                }
+            }
+            
+        });
+        world.add(editBudgetButton);
+        jf.add(editBudget);
         jf.add(exit);
         jf.add(switchView);
         jf.add(world);
         hq.add(hqBackground);
         world.add(worldText);
-        world.add(worldHeaders);
-        world.add(localHeaders);
         world.add(localText);
         world.add(localMenu);
         world.add(worldMenu);
@@ -154,7 +189,7 @@ public class ExodusUI {
         jf.revalidate();
         jf.setVisible(true);
         
-        ExodusData game = new ExodusData(0.5f, 2);
+        
         /*for(int i = 0; i < 250; i++) //Just for looking at game data
         {
             game.nextYear();
@@ -173,20 +208,16 @@ public class ExodusUI {
         animation.scheduleAtFixedRate(() -> {
             try
             {
-                if(jobs.size() > 0)
+                if(jobs.size() >= 1)
                 {
+                    while(jobs.get(0) == null)
+                    {
+                        jobs.remove(0);
+                    }
                     Animation nextInQueue = jobs.get(0);
-                    try
-                    {
-                        int newX = nextInQueue.calculateLocation()[0];
-                        int newY = nextInQueue.calculateLocation()[1];
-                        nextInQueue.object.setLocation(newX, newY);
-                    }
-                    catch(Exception e)
-                    {
-                        System.out.println("probably a null pointer");
-                        System.out.println("next in queue: " + nextInQueue);
-                    }
+                    int newX = nextInQueue.calculateLocation()[0];
+                    int newY = nextInQueue.calculateLocation()[1];
+                    nextInQueue.object.setLocation(newX, newY);
                     
                     int[] currentLocation = new int[] {nextInQueue.object.getLocation().x, nextInQueue.object.getLocation().y};
                     if(currentLocation[0] == nextInQueue.targetLocation[0] && currentLocation[1] == nextInQueue.targetLocation[1])
@@ -204,9 +235,7 @@ public class ExodusUI {
             }
             catch(Exception e)
             {
-                e.printStackTrace();
-                System.out.println(e.getMessage());
-                System.out.println(e.toString());
+                
             }
         }, 0, 1, TimeUnit.NANOSECONDS);
         
@@ -214,15 +243,18 @@ public class ExodusUI {
         gameClock.scheduleAtFixedRate(() -> {
             try
             {
-                if(game.history.size() > 0)
-                {
-                    String localTextSummary = "<html>" + islandSelected + "<br>";
-                    for(int i = 0; i < 9; i++)
-                    {
-                        localTextSummary += game.history.get(game.history.size()-1)[4 + islandSelected * 10 + i] + "<br>";
-                    }
-                    localText.setText(localTextSummary + "</html>");
-                }
+                String local = "<html>";
+                local += "<i>Island:</i> " + islandSelected;
+                local += "<br><i>Population:</i> " + game.getIslands()[islandSelected].getPopulation();
+                local += "<br><i>Money:</i> " + game.getIslands()[islandSelected].getMoney();
+                local += "<br><i>GDP Per Capita:</i> " + game.getIslands()[islandSelected].getGdpPerCapita();
+                local += "<br><i>Crime Rate:</i> " + game.getIslands()[islandSelected].getCrimeRate();
+                local += "<br><i>Food Access:</i> " + game.getIslands()[islandSelected].getFoodSecurity();
+                local += "<br><i>Energy Access:</i> " + game.getIslands()[islandSelected].getEnergySecurity();
+                local += "<br><i>Employment Rate:</i> " + game.getIslands()[islandSelected].getJobSecurity();
+                local += "<br><i>Happiness:</i> " + game.getIslands()[islandSelected].getHappiness();
+                local += "<br><i>Land Area:</i> " + game.getIslands()[islandSelected].getLandArea() + "</html>";
+                localText.setText(local);
             }
             catch(Exception e)
             {
@@ -271,7 +303,7 @@ public class ExodusUI {
         JLabel label = new JLabel();
         label.setVerticalTextPosition(JLabel.CENTER);
         label.setVerticalAlignment(SwingConstants.TOP);
-        label.setFont(new Font("Courier New", Font.BOLD, 24));
+        label.setFont(new Font("Courier New", Font.PLAIN, 18));
         label.setText(text);
         label.setLocation(x, y);
         label.setSize(width, height);
