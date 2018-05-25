@@ -74,7 +74,6 @@ public class ExodusUI {
         islands.add(island3);
         JLabel localText = createLabel(25, 650, 350, 150, null, null, false);
         JLabel worldText = createLabel(1545, 700, 350, 400, null, null, false);
-        JLabel vignette = createLabel(0, 0, 1920, 1080, null, null, true);
         for(JLabel island : islands) //Event listeners for mouse hover, click
         {
             final int index = islands.indexOf(island);
@@ -176,6 +175,11 @@ public class ExodusUI {
         investButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if(budgetOpen)
+                {
+                    jobs.add(Animation.globalAnimation(editBudget, 750, 1080, 0.5f));
+                    budgetOpen = false;
+                }
                 if(investOpen)
                 {
                     jobs.add(Animation.globalAnimation(investPanel, 750, 1080, 0.5f));
@@ -185,6 +189,7 @@ public class ExodusUI {
                 {
                     jobs.add(Animation.globalAnimation(investPanel, 750, 350, 0.5f));
                     investOpen = true;
+                    
                 }
                 HandleSound("click.wav");
             }
@@ -206,7 +211,7 @@ public class ExodusUI {
                 if(investOpen)
                 {
                     jobs.add(Animation.globalAnimation(investPanel, 750, 1080, 0.5f));
-                    budgetOpen = investOpen;
+                    investOpen = false;
                 }
                 if(screen == 0)
                 {
@@ -230,6 +235,11 @@ public class ExodusUI {
         editBudgetButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if(investOpen)
+                {
+                    jobs.add(Animation.globalAnimation(investPanel, 750, 1080, 0.5f));
+                    investOpen = false;
+                }
                 if(budgetOpen)
                 {
                     jobs.add(Animation.globalAnimation(editBudget, 750, 1080, 0.5f));
@@ -243,6 +253,7 @@ public class ExodusUI {
                     greenDefenses.setValue(Math.round(game.getIslands()[islandSelected].getBudget()[2] * 100));
                     military.setValue(Math.round(game.getIslands()[islandSelected].getBudget()[3] * 100));
                     jobs.add(Animation.globalAnimation(editBudget, 750, 350, 0.5f));
+                    
                     budgetOpen = true;
                 }
                 HandleSound("click.wav");
@@ -268,7 +279,7 @@ public class ExodusUI {
         world.add(localText);
         world.add(localMenu);
         world.add(worldMenu);
-        world.add(vignette);
+        
         world.add(island1);
         world.add(island2);
         world.add(island3);
@@ -350,17 +361,6 @@ public class ExodusUI {
                 local += "<br><i>Happiness:</i> " + game.getIslands()[islandSelected].getHappiness();
                 local += "<br><i>Land Area:</i> " + game.getIslands()[islandSelected].getLandArea() + "</html>";
                 localText.setText(local);
-                
-                if(investOpen || budgetOpen)
-                {
-                    vignette.setIcon(readImage("vignette.png", 1920, 1080));
-                    editBudget.setBackground(Color.WHITE);
-                    investPanel.setBackground(Color.WHITE);
-                }
-                else
-                {
-                    vignette.setIcon(null);
-                }
             }
             catch(Exception e)
             {
