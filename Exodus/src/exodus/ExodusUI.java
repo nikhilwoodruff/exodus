@@ -8,6 +8,8 @@ package exodus;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,9 +17,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -46,12 +48,20 @@ public class ExodusUI {
     List<Animation> jobs = new ArrayList<Animation>();
     public ExodusUI()
     {
+        ImageIcon[] islandImages = new ImageIcon[6];
+        islandImages[0] = readImage("island1.png", 450, 450);
+        islandImages[1] = readImage("island2.png", 450, 450);
+        islandImages[2] = readImage("island3.png", 450, 450);
+        islandImages[3] = readImage("altIsland1.png", 450, 450);
+        islandImages[4] = readImage("altIsland2.png", 450, 450);
+        islandImages[5] = readImage("altIsland3.png", 450, 450);
         ExodusData game = new ExodusData(0.5f, 2);
         investOpen = false;
         budgetOpen = false;
         screen = 0;
         islandSelected = 0;
         JFrame jf = new JFrame();
+        
         jf.getContentPane().setBackground(new Color(55, 130, 200));
         JLabel worldBackground = createLabel(0, 0, 1920, 1080, readImage("stars.png", 1920, 1080), null, false);
         JPanel world = new JPanel();
@@ -66,9 +76,9 @@ public class ExodusUI {
         JLabel localMenu = createLabel(0, 600, 400, 480, Color.GRAY, null, false);
         JLabel worldMenu = createLabel(1520, 600, 400, 480, Color.GRAY, null, false);
         List<JLabel> islands = new ArrayList<JLabel>();
-        JLabel island1 = createLabel(175, 150, 450, 450, readImage("altIsland1.png", 450, 450), null, true);
-        JLabel island2 = createLabel(1100, 75, 450, 450, readImage("island2.png", 450, 450), null, true);
-        JLabel island3 = createLabel(800, 500, 450, 450, readImage("island3.png", 450, 450), null, true);
+        JLabel island1 = createLabel(175, 150, 450, 450, islandImages[3], null, true);
+        JLabel island2 = createLabel(1100, 75, 450, 450, islandImages[1], null, true);
+        JLabel island3 = createLabel(800, 500, 450, 450, islandImages[2], null, true);
         islands.add(island1);
         islands.add(island2);
         islands.add(island3);
@@ -81,15 +91,16 @@ public class ExodusUI {
             {
                 @Override
                 public void mouseClicked(MouseEvent e) {
+                    HandleSound("click.wav");
                     if(!budgetOpen && !investOpen)
                     {
                         for(int i = 0; i < 3; i++)
                         {
-                            islands.get(i).setIcon(readImage("island" + (i + 1) + ".png", 450, 450));
+                            islands.get(i).setIcon(islandImages[i]);
                         }
                         islandSelected = index;
-                        island.setIcon(readImage("altIsland" + (index + 1) + ".png", 450, 450));
-                        HandleSound("click.wav");
+                        island.setIcon(islandImages[index+3]);
+                        
                     }
                     
                 }
@@ -110,7 +121,7 @@ public class ExodusUI {
                     if(!budgetOpen && !investOpen)
                     {
                         HandleSound("hover.wav");
-                        island.setIcon(readImage("altIsland" + (index + 1) + ".png", 450, 450));
+                        island.setIcon(islandImages[index+3]);
                     }
                 }
 
@@ -120,7 +131,7 @@ public class ExodusUI {
                     {
                         if(index != islandSelected)
                         {
-                            island.setIcon(readImage("island" + (index + 1) + ".png", 450, 450));
+                            island.setIcon(islandImages[index]);
                         }
                     }
                     
@@ -177,18 +188,19 @@ public class ExodusUI {
             public void actionPerformed(ActionEvent e) {
                 if(budgetOpen)
                 {
-                    jobs.add(Animation.globalAnimation(editBudget, 750, 1080, 0.5f));
                     budgetOpen = false;
+                    jobs.add(Animation.globalAnimation(editBudget, 750, 1080, 0.5f));
+                    
                 }
                 if(investOpen)
                 {
-                    jobs.add(Animation.globalAnimation(investPanel, 750, 1080, 0.5f));
                     investOpen = false;
+                    jobs.add(Animation.globalAnimation(investPanel, 750, 1080, 0.5f));
                 }
                 else
                 {
-                    jobs.add(Animation.globalAnimation(investPanel, 750, 350, 0.5f));
                     investOpen = true;
+                    jobs.add(Animation.globalAnimation(investPanel, 750, 350, 0.5f));
                     
                 }
                 HandleSound("click.wav");
@@ -205,13 +217,15 @@ public class ExodusUI {
             public void actionPerformed(ActionEvent e) {
                 if(budgetOpen)
                 {
-                    jobs.add(Animation.globalAnimation(editBudget, 750, 1080, 0.5f));
                     budgetOpen = false;
+                    jobs.add(Animation.globalAnimation(editBudget, 750, 1080, 0.5f));
+                    
                 }
                 if(investOpen)
                 {
-                    jobs.add(Animation.globalAnimation(investPanel, 750, 1080, 0.5f));
                     investOpen = false;
+                    jobs.add(Animation.globalAnimation(investPanel, 750, 1080, 0.5f));
+                    
                 }
                 if(screen == 0)
                 {
@@ -237,24 +251,27 @@ public class ExodusUI {
             public void actionPerformed(ActionEvent e) {
                 if(investOpen)
                 {
-                    jobs.add(Animation.globalAnimation(investPanel, 750, 1080, 0.5f));
                     investOpen = false;
+                    jobs.add(Animation.globalAnimation(investPanel, 750, 1080, 0.5f));
+                    
                 }
                 if(budgetOpen)
                 {
+                    budgetOpen = false;
                     jobs.add(Animation.globalAnimation(editBudget, 750, 1080, 0.5f));
                     game.getIslands()[islandSelected].setBudget(new float[] {(float) publicServices.getValue() / 100,(float) greenEnergy.getValue() / 100,(float) greenDefenses.getValue() / 100,(float) military.getValue() / 100});
-                    budgetOpen = false;
+                    
                 }
                 else
                 {
+                    budgetOpen = true;
                     publicServices.setValue(Math.round(game.getIslands()[islandSelected].getBudget()[0] * 100));
                     greenEnergy.setValue(Math.round(game.getIslands()[islandSelected].getBudget()[1] * 100));
                     greenDefenses.setValue(Math.round(game.getIslands()[islandSelected].getBudget()[2] * 100));
                     military.setValue(Math.round(game.getIslands()[islandSelected].getBudget()[3] * 100));
                     jobs.add(Animation.globalAnimation(editBudget, 750, 350, 0.5f));
                     
-                    budgetOpen = true;
+                    
                 }
                 HandleSound("click.wav");
             }
@@ -366,7 +383,7 @@ public class ExodusUI {
             {
                 e.printStackTrace();
             }
-        }, 0, 16, TimeUnit.MILLISECONDS);
+        }, 0, 10, TimeUnit.MILLISECONDS);
         
         ScheduledExecutorService dataSync = Executors.newSingleThreadScheduledExecutor();
         dataSync.scheduleAtFixedRate(() -> {
