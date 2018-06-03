@@ -44,7 +44,7 @@ public class ExodusUI {
     int islandSelected;
     int screen;
     boolean budgetOpen;
-    boolean investOpen;
+    boolean actionOpen;
     List<Animation> jobs = new ArrayList<Animation>();
     public ExodusUI()
     {
@@ -56,7 +56,7 @@ public class ExodusUI {
         islandImages[4] = readImage("altIsland2.png", 450, 450);
         islandImages[5] = readImage("altIsland3.png", 450, 450);
         ExodusData game = new ExodusData(0.5f, 2);
-        investOpen = false;
+        actionOpen = false;
         budgetOpen = false;
         screen = 0;
         islandSelected = 0;
@@ -82,8 +82,8 @@ public class ExodusUI {
         islands.add(island1);
         islands.add(island2);
         islands.add(island3);
-        JLabel localText = createLabel(25, 650, 350, 150, null, null, false);
-        JLabel worldText = createLabel(1545, 700, 350, 400, null, null, false);
+        JLabel localText = createLabel(25, 650, 350, 400, null, null, false);
+        JLabel worldText = createLabel(1545, 650, 350, 400, null, null, false);
         for(JLabel island : islands) //Event listeners for mouse hover, click
         {
             final int index = islands.indexOf(island);
@@ -92,7 +92,7 @@ public class ExodusUI {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     HandleSound("click.wav");
-                    if(!budgetOpen && !investOpen)
+                    if(!budgetOpen && !actionOpen)
                     {
                         for(int i = 0; i < 3; i++)
                         {
@@ -118,7 +118,7 @@ public class ExodusUI {
                 @Override
                 public void mouseEntered(MouseEvent e) {
                     
-                    if(!budgetOpen && !investOpen)
+                    if(!budgetOpen && !actionOpen)
                     {
                         HandleSound("hover.wav");
                         island.setIcon(islandImages[index+3]);
@@ -127,7 +127,7 @@ public class ExodusUI {
 
                 @Override
                 public void mouseExited(MouseEvent e) {
-                    if(!budgetOpen && !investOpen)
+                    if(!budgetOpen && !actionOpen)
                     {
                         if(index != islandSelected)
                         {
@@ -178,12 +178,12 @@ public class ExodusUI {
             editBudget.add(sliderLabels[i]);
         }
         
-        JPanel investPanel = new JPanel();
-        investPanel.setLayout(null);
-        investPanel.setSize(500, 400);
-        investPanel.setLocation(750, 1080);
-        JButton investButton = createButton(150, 825, 100, 50, "Invest");
-        investButton.addActionListener(new ActionListener() {
+        JPanel actionPanel = new JPanel();
+        actionPanel.setLayout(null);
+        actionPanel.setSize(500, 400);
+        actionPanel.setLocation(750, 1080);
+        JButton actionButton = createButton(150, 900, 100, 50, "Actions");
+        actionButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(budgetOpen)
@@ -192,15 +192,15 @@ public class ExodusUI {
                     jobs.add(Animation.globalAnimation(editBudget, 750, 1080, 0.5f));
                     
                 }
-                if(investOpen)
+                if(actionOpen)
                 {
-                    investOpen = false;
-                    jobs.add(Animation.globalAnimation(investPanel, 750, 1080, 0.5f));
+                    actionOpen = false;
+                    jobs.add(Animation.globalAnimation(actionPanel, 750, 1080, 0.5f));
                 }
                 else
                 {
-                    investOpen = true;
-                    jobs.add(Animation.globalAnimation(investPanel, 750, 350, 0.5f));
+                    actionOpen = true;
+                    jobs.add(Animation.globalAnimation(actionPanel, 750, 350, 0.5f));
                     
                 }
                 HandleSound("click.wav");
@@ -221,10 +221,10 @@ public class ExodusUI {
                     jobs.add(Animation.globalAnimation(editBudget, 750, 1080, 0.5f));
                     
                 }
-                if(investOpen)
+                if(actionOpen)
                 {
-                    investOpen = false;
-                    jobs.add(Animation.globalAnimation(investPanel, 750, 1080, 0.5f));
+                    actionOpen = false;
+                    jobs.add(Animation.globalAnimation(actionPanel, 750, 1080, 0.5f));
                     
                 }
                 if(screen == 0)
@@ -245,14 +245,14 @@ public class ExodusUI {
         });
         JLabel budgetBackground = createLabel(0, 0, 500, 250, Color.red, null, true);
         editBudget.add(budgetBackground);
-        JButton editBudgetButton = createButton(25, 825, 100, 50, "Edit Budget");
+        JButton editBudgetButton = createButton(25, 900, 100, 50, "Edit Budget");
         editBudgetButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(investOpen)
+                if(actionOpen)
                 {
-                    investOpen = false;
-                    jobs.add(Animation.globalAnimation(investPanel, 750, 1080, 0.5f));
+                    actionOpen = false;
+                    jobs.add(Animation.globalAnimation(actionPanel, 750, 1080, 0.5f));
                     
                 }
                 if(budgetOpen)
@@ -278,7 +278,7 @@ public class ExodusUI {
             
         });
         world.add(editBudgetButton);
-        world.add(investButton);
+        world.add(actionButton);
         JLabel rocketLabel = createLabel(50, 50, 400, 900, null, "Rocket", true);
         BufferedImage img = new BufferedImage(400, 900, BufferedImage.TYPE_INT_RGB);
         Graphics g = img.getGraphics();
@@ -287,7 +287,7 @@ public class ExodusUI {
         rocketLabel.setIcon(new ImageIcon(img));
         hq.add(rocketLabel);
         jf.add(editBudget);
-        jf.add(investPanel);
+        jf.add(actionPanel);
         jf.add(exit);
         jf.add(switchView);
         jf.add(world);
@@ -368,16 +368,19 @@ public class ExodusUI {
             {
                 String local = "<html>";
                 local += "<i>Island:</i> " + islandSelected;
-                local += "<br><i>Population:</i> " + game.getIslands()[islandSelected].getPopulation();
-                local += "<br><i>Money:</i> " + game.getIslands()[islandSelected].getMoney();
-                local += "<br><i>GDP Per Capita:</i> " + game.getIslands()[islandSelected].getGdpPerCapita();
+                local += "<br><i>Population in millions:</i> " + game.getIslands()[islandSelected].getPopulation();
+                local += "<br><i>Money in millions:</i> " + game.getIslands()[islandSelected].getMoney();
+                local += "<br><i>GDP Per Capita in thousands:</i> " + game.getIslands()[islandSelected].getGdpPerCapita();
                 local += "<br><i>Crime Rate:</i> " + game.getIslands()[islandSelected].getCrimeRate();
                 local += "<br><i>Food Access:</i> " + game.getIslands()[islandSelected].getFoodSecurity();
                 local += "<br><i>Energy Access:</i> " + game.getIslands()[islandSelected].getEnergySecurity();
                 local += "<br><i>Employment Rate:</i> " + game.getIslands()[islandSelected].getJobSecurity();
                 local += "<br><i>Happiness:</i> " + game.getIslands()[islandSelected].getHappiness();
-                local += "<br><i>Land Area:</i> " + game.getIslands()[islandSelected].getLandArea() + "</html>";
+                local += "<br><i>EditBudgetOpen:</i> " + budgetOpen;
+                local += "<br><i>InvestOpen:</i> " + actionOpen;
+                local += "<br><i>Land Area in 1000km3:</i> " + game.getIslands()[islandSelected].getLandArea()/1000 + "</html>";
                 localText.setText(local);
+                localText.setSize(localText.getPreferredSize());
             }
             catch(Exception e)
             {
@@ -389,7 +392,10 @@ public class ExodusUI {
         dataSync.scheduleAtFixedRate(() -> {
             try
             {
-                game.nextYear();
+                if(!budgetOpen && !actionOpen)
+                {
+                    game.nextYear();
+                }
                 String worldTextSummary = "<html>";
                 for(int i = 0; i < 4; i++)
                 {
