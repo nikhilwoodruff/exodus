@@ -363,10 +363,6 @@ public class ExodusUI {
             {
                 if(jobs.size() >= 1)
                 {
-                    while(jobs.get(0) == null)
-                    {
-                        jobs.remove(0);
-                    }
                     Animation nextInQueue = jobs.get(0);
                     int newX = nextInQueue.calculateLocation()[0];
                     int newY = nextInQueue.calculateLocation()[1];
@@ -422,7 +418,7 @@ public class ExodusUI {
         dataSync.scheduleAtFixedRate(() -> {
             try
             {
-                if(!budgetOpen && !actionOpen)
+                if(!budgetOpen && !actionOpen && !(game.getWorldTime() > game.getWorldEndTime()))
                 {
                     game.nextYear();
                 }
@@ -441,7 +437,7 @@ public class ExodusUI {
             {
                 e.printStackTrace();
             }
-        }, 0, (long) game.getYearLength(), TimeUnit.SECONDS);
+        }, 0, (long) 100, TimeUnit.MILLISECONDS);
         
     }
     

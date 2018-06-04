@@ -148,6 +148,7 @@ public class Island {
         gdpPerCapita = 80f * difficulty;
         taxRate = 0.15f;
         landArea = 250f / difficulty;
+        energySecurity = 0.97f;
         foodSecurity = 0.85f;
         jobSecurity = 0.95f;
         happiness = 0.95f;
@@ -168,10 +169,10 @@ public class Island {
     public void updatePopulation()
     {
         population *= 1 + (Math.random() - 0.2f) * 0.005f;
-        crimeRate += 0.1f * (1 - jobSecurity) * (1 - foodSecurity) * (population / landArea) * (Math.random() - 0.2f) * (1 - crimeRate);
-        foodSecurity += 0.06f * (1 - jobSecurity) * 30 / gdpPerCapita * (Math.random() - 0.3f);
+        crimeRate += 0.1f * (jobSecurity / 0.85) * (foodSecurity / 0.85) * (population / landArea) * (Math.random() - 0.2f) * (1 - crimeRate);
+        foodSecurity += 0.06f * (jobSecurity / 0.9) * 30 / gdpPerCapita * (Math.random() - 0.3f);
         energySecurity += 0.04f * 30 / gdpPerCapita * (Math.random() - 0.4f);
-        gdpPerCapita *= (1.1005 - crimeRate); 
+        gdpPerCapita *= ((1.1005 / crimeRate) + (1.88 / foodSecurity) + (1.97 / energySecurity)) / 3; 
         happiness *= 1.15 - crimeRate;
         if(happiness > 1)
         {
@@ -183,9 +184,9 @@ public class Island {
             sum += budget[i];
         }
         money -= sum * 40 * population * taxRate;
-        System.out.println("Income: " + population * taxRate * gdpPerCapita);
-        System.out.println("Expenses: " + sum * 40 * population * taxRate);
-        System.out.println("Deficit/Surplus: " + (population * taxRate * gdpPerCapita - sum * 40 * population * taxRate));
+//        System.out.println("Income: " + population * taxRate * gdpPerCapita);
+//        System.out.println("Expenses: " + sum * 40 * population * taxRate);
+//        System.out.println("Deficit/Surplus: " + (population * taxRate * gdpPerCapita - sum * 40 * population * taxRate));
     }
     public void upgradeFarms()
     {

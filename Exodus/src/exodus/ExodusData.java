@@ -99,7 +99,7 @@ public class ExodusData {
     
     
     
-    public ExodusData(float difficulty, int numberOfMinutes)
+    public ExodusData(float difficulty, float numberOfMinutes)
     {
         worldPopulation = 0;
         for(int i = 0; i < 3; i++)
