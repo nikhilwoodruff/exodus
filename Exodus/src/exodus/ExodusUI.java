@@ -402,9 +402,9 @@ public class ExodusUI {
                 local += "<br><i>Energy Access:</i> " + game.getIslands()[islandSelected].getEnergySecurity();
                 local += "<br><i>Employment Rate:</i> " + game.getIslands()[islandSelected].getJobSecurity();
                 local += "<br><i>Happiness:</i> " + game.getIslands()[islandSelected].getHappiness();
-                local += "<br><i>EditBudgetOpen:</i> " + budgetOpen;
-                local += "<br><i>InvestOpen:</i> " + actionOpen;
-                local += "<br><i>Land Area in 1000km3:</i> " + game.getIslands()[islandSelected].getLandArea()/1000 + "</html>";
+//                local += "<br><i>EditBudgetOpen:</i> " + budgetOpen;
+//                local += "<br><i>InvestOpen:</i> " + actionOpen;
+//                local += "<br><i>Land Area in 1000km3:</i> " + game.getIslands()[islandSelected].getLandArea()/1000 + "</html>";
                 localText.setText(local);
                 localText.setSize(localText.getPreferredSize());
             }
@@ -437,7 +437,7 @@ public class ExodusUI {
             {
                 e.printStackTrace();
             }
-        }, 0, (long) 100, TimeUnit.MILLISECONDS);
+        }, 0, (long) 800, TimeUnit.MILLISECONDS);
         
     }
     

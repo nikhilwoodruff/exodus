@@ -142,14 +142,14 @@ public class Island {
     
     public Island(float difficulty) 
     {
-        crimeRate = 0.2f * difficulty;
+        crimeRate = 0.04f * difficulty;
         population = (float) Math.floor(50 * difficulty);
         money = 1000f * difficulty; //in bn
-        gdpPerCapita = 80f * difficulty;
-        taxRate = 0.15f;
+        gdpPerCapita = 105f * difficulty;
+        taxRate = 0.4f;
         landArea = 250f / difficulty;
         energySecurity = 0.97f;
-        foodSecurity = 0.85f;
+        foodSecurity = 0.94f;
         jobSecurity = 0.95f;
         happiness = 0.95f;
         budget = new float[] {0.25f, 0.25f, 0.25f, 0.25f};
@@ -168,25 +168,36 @@ public class Island {
     }
     public void updatePopulation()
     {
-        population *= 1 + (Math.random() - 0.2f) * 0.005f;
-        crimeRate += 0.1f * (jobSecurity / 0.85) * (foodSecurity / 0.85) * (population / landArea) * (Math.random() - 0.2f) * (1 - crimeRate);
-        foodSecurity += 0.06f * (jobSecurity / 0.9) * 30 / gdpPerCapita * (Math.random() - 0.3f);
-        energySecurity += 0.04f * 30 / gdpPerCapita * (Math.random() - 0.4f);
-        gdpPerCapita *= ((1.1005 / crimeRate) + (1.88 / foodSecurity) + (1.97 / energySecurity)) / 3; 
-        happiness *= 1.15 - crimeRate;
-        if(happiness > 1)
-        {
-            happiness = 1;
-        }
+        population += (Math.random() - 0.2f) * 0.005f * population / 25;
+        crimeRate = addToClamped(crimeRate, crimeRate/85 + (Math.random() - 0.35f) * crimeRate/45);
+        foodSecurity = addToClamped(foodSecurity, -foodSecurity/245 - (Math.random() - 0.8f) * foodSecurity/108 + budget[0] * 0.0015f);
+        energySecurity = addToClamped(energySecurity, -energySecurity/165 - (Math.random() - 0.6f) * energySecurity/116 + budget[0] * 0.0007f + budget[1] * 0.011f);
+        gdpPerCapita += ((0.045 - crimeRate) + (foodSecurity - 0.905) + (energySecurity - 0.924) + (jobSecurity - 0.9)) / 0.3;
+        jobSecurity = addToClamped(jobSecurity, (-0.94 + foodSecurity - crimeRate) / 20);
+        happiness = addToClamped(happiness, -(-crimeRate + foodSecurity + energySecurity - 1.78)/127 + (budget[0] - 0.2f) * 0.03f - taxRate * 0.02f);
         float sum = 0;
         for(int i = 0; i < 4; i++)
         {
             sum += budget[i];
         }
         money -= sum * 40 * population * taxRate;
+        
 //        System.out.println("Income: " + population * taxRate * gdpPerCapita);
 //        System.out.println("Expenses: " + sum * 40 * population * taxRate);
 //        System.out.println("Deficit/Surplus: " + (population * taxRate * gdpPerCapita - sum * 40 * population * taxRate));
+    }
+    float addToClamped(float variable, double amount)
+    {
+        float result = variable + (float) amount;
+        if(result < 0)
+        {
+            result = 0;
+        }
+        else if(result > 1)
+        {
+            result = 1;
+        }
+        return result;
     }
     public void upgradeFarms()
     {
