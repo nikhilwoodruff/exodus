@@ -189,18 +189,27 @@ public class ExodusUI {
                 if(budgetOpen)
                 {
                     budgetOpen = false;
-                    jobs.add(Animation.globalAnimation(editBudget, 750, 1080, 0.5f));
+                    if(jobs.size() < 3)
+                    {
+                        jobs.add(Animation.globalAnimation(editBudget, 750, 1080, 0.5f));
+                    }
                     
                 }
                 if(actionOpen)
                 {
                     actionOpen = false;
-                    jobs.add(Animation.globalAnimation(actionPanel, 750, 1080, 0.5f));
+                    if(jobs.size() < 3)
+                    {
+                        jobs.add(Animation.globalAnimation(actionPanel, 750, 1080, 0.5f));
+                    }
                 }
                 else
                 {
                     actionOpen = true;
-                    jobs.add(Animation.globalAnimation(actionPanel, 750, 350, 0.5f));
+                    if(jobs.size() < 3)
+                    {
+                        jobs.add(Animation.globalAnimation(actionPanel, 750, 350, 0.5f));
+                    }
                     
                 }
                 HandleSound("click.wav");
@@ -218,25 +227,37 @@ public class ExodusUI {
                 if(budgetOpen)
                 {
                     budgetOpen = false;
-                    jobs.add(Animation.globalAnimation(editBudget, 750, 1080, 0.5f));
+                    if(jobs.size() < 3)
+                    {
+                        jobs.add(Animation.globalAnimation(editBudget, 750, 1080, 0.5f));
+                    }
                     
                 }
                 if(actionOpen)
                 {
                     actionOpen = false;
-                    jobs.add(Animation.globalAnimation(actionPanel, 750, 1080, 0.5f));
+                    if(jobs.size() < 3)
+                    {
+                        jobs.add(Animation.globalAnimation(actionPanel, 750, 1080, 0.5f));
+                    }
                     
                 }
                 if(screen == 0)
                 {
-                    jobs.add(Animation.globalAnimation(world, 0, 1080, 0.5f));
-                    jobs.add(Animation.globalAnimation(hq, 0, 0, 0.5f));
+                    if(jobs.size() < 3)
+                    {
+                        jobs.add(Animation.globalAnimation(world, 0, 1080, 0.5f));
+                        jobs.add(Animation.globalAnimation(hq, 0, 0, 0.5f));
+                    }
                     screen = 1;
                 }
                 else if(screen == 1)
                 {
-                    jobs.add(Animation.globalAnimation(hq, 0, 1080, 0.5f));
-                    jobs.add(Animation.globalAnimation(world, 0, 0, 0.5f));
+                    if(jobs.size() < 3)
+                    {
+                        jobs.add(Animation.globalAnimation(hq, 0, 1080, 0.5f));
+                        jobs.add(Animation.globalAnimation(world, 0, 0, 0.5f));
+                    }
                     screen = 0;
                 }
                 HandleSound("click.wav");
@@ -252,13 +273,19 @@ public class ExodusUI {
                 if(actionOpen)
                 {
                     actionOpen = false;
-                    jobs.add(Animation.globalAnimation(actionPanel, 750, 1080, 0.5f));
+                    if(jobs.size() < 3)
+                    {
+                        jobs.add(Animation.globalAnimation(actionPanel, 750, 1080, 0.5f));
+                    }
                     
                 }
                 if(budgetOpen)
                 {
                     budgetOpen = false;
-                    jobs.add(Animation.globalAnimation(editBudget, 750, 1080, 0.5f));
+                    if(jobs.size() < 3)
+                    {
+                        jobs.add(Animation.globalAnimation(editBudget, 750, 1080, 0.5f));
+                    }
                     game.getIslands()[islandSelected].setBudget(new float[] {(float) publicServices.getValue() / 100,(float) greenEnergy.getValue() / 100,(float) greenDefenses.getValue() / 100,(float) military.getValue() / 100});
                     
                 }
@@ -269,7 +296,10 @@ public class ExodusUI {
                     greenEnergy.setValue(Math.round(game.getIslands()[islandSelected].getBudget()[1] * 100));
                     greenDefenses.setValue(Math.round(game.getIslands()[islandSelected].getBudget()[2] * 100));
                     military.setValue(Math.round(game.getIslands()[islandSelected].getBudget()[3] * 100));
-                    jobs.add(Animation.globalAnimation(editBudget, 750, 350, 0.5f));
+                    if(jobs.size() < 3)
+                    {
+                        jobs.add(Animation.globalAnimation(editBudget, 750, 350, 0.5f));
+                    }
                     
                     
                 }
