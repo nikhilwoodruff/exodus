@@ -8,8 +8,6 @@ package exodus;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,7 +17,6 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -32,6 +29,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JSlider;
 import javax.swing.SwingConstants;
 
@@ -82,6 +80,9 @@ public class ExodusUI {
         islands.add(island1);
         islands.add(island2);
         islands.add(island3);
+        JProgressBar happinessBar = new JProgressBar();
+        happinessBar.setLocation(25, 850);
+        happinessBar.setSize(250, 15);
         JLabel localText = createLabel(25, 650, 350, 400, null, null, false);
         JLabel worldText = createLabel(1545, 650, 350, 400, null, null, false);
         for(JLabel island : islands) //Event listeners for mouse hover, click
@@ -216,7 +217,15 @@ public class ExodusUI {
             }
             
         });
-        
+        JButton movePopulation = createButton(0, 0, 100, 50, "Move Population");
+        movePopulation.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                HandleSound("click.wav");
+            }
+            
+        });
+        actionPanel.add(movePopulation);
         editBudget.add(publicServices);
         editBudget.add(greenEnergy);
         editBudget.add(greenDefenses);
@@ -323,7 +332,9 @@ public class ExodusUI {
         jf.add(world);
         hq.add(hqBackground);
         world.add(worldText);
+        world.add(happinessBar);
         world.add(localText);
+        
         world.add(localMenu);
         world.add(worldMenu);
         
@@ -407,6 +418,7 @@ public class ExodusUI {
 //                local += "<br><i>Land Area in 1000km3:</i> " + game.getIslands()[islandSelected].getLandArea()/1000 + "</html>";
                 localText.setText(local);
                 localText.setSize(localText.getPreferredSize());
+                happinessBar.setValue((int) Math.round(game.getIslands()[islandSelected].getHappiness() * 100));
             }
             catch(Exception e)
             {
