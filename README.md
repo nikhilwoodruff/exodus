@@ -1,2 +1,2 @@
 # Exodus
-Survive global warming
+A top-down, continuous simulation game written in Java about climate change.
