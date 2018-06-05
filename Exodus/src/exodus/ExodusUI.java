@@ -38,14 +38,14 @@ import javax.swing.SwingConstants;
  * @author 12nwoodruff
  */
 public class ExodusUI {
-    
+
     int islandSelected;
     int screen;
     boolean budgetOpen;
     boolean actionOpen;
     List<Animation> jobs = new ArrayList<Animation>();
-    public ExodusUI()
-    {
+
+    public ExodusUI() {
         ImageIcon[] islandImages = new ImageIcon[6];
         islandImages[0] = readImage("island1.png", 450, 450);
         islandImages[1] = readImage("island2.png", 450, 450);
@@ -59,7 +59,7 @@ public class ExodusUI {
         screen = 0;
         islandSelected = 0;
         JFrame jf = new JFrame();
-        
+
         jf.getContentPane().setBackground(new Color(55, 130, 200));
         JLabel worldBackground = createLabel(0, 0, 1920, 1080, readImage("stars.png", 1920, 1080), null, false);
         JPanel world = new JPanel();
@@ -80,68 +80,76 @@ public class ExodusUI {
         islands.add(island1);
         islands.add(island2);
         islands.add(island3);
+        JLabel energyLabel = createLabel(10, 790, 100, 30, null, "Energy Access", true);
+        world.add(energyLabel);
+        JProgressBar energyBar = new JProgressBar();
+        energyBar.setLocation(125, 790);
+        energyBar.setSize(250, 15);
+        world.add(energyBar);
+        JLabel employmentLabel = createLabel(10, 820, 100, 30, null, "Employment", true);
+        world.add(employmentLabel);
+        JProgressBar employmentBar = new JProgressBar();
+        employmentBar.setLocation(125, 820);
+        employmentBar.setSize(250, 15);
+        world.add(employmentBar);
+        JLabel happinessLabel = createLabel(10, 850, 100, 30, null, "Happiness", true);
+        world.add(happinessLabel);
         JProgressBar happinessBar = new JProgressBar();
-        happinessBar.setLocation(25, 850);
+        happinessBar.setLocation(125, 850);
         happinessBar.setSize(250, 15);
         JLabel localText = createLabel(25, 650, 350, 400, null, null, false);
         JLabel worldText = createLabel(1545, 650, 350, 400, null, null, false);
-        for(JLabel island : islands) //Event listeners for mouse hover, click
+        for (JLabel island : islands) //Event listeners for mouse hover, click
         {
             final int index = islands.indexOf(island);
-            MouseListener ml = new MouseListener()
-            {
+            MouseListener ml = new MouseListener() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     HandleSound("click.wav");
-                    if(!budgetOpen && !actionOpen)
-                    {
-                        for(int i = 0; i < 3; i++)
-                        {
+                    if (!budgetOpen && !actionOpen) {
+                        for (int i = 0; i < 3; i++) {
                             islands.get(i).setIcon(islandImages[i]);
                         }
                         islandSelected = index;
-                        island.setIcon(islandImages[index+3]);
-                        
+                        island.setIcon(islandImages[index + 3]);
+
                     }
-                    
+
                 }
 
                 @Override
                 public void mousePressed(MouseEvent e) {
-                    
+
                 }
 
                 @Override
                 public void mouseReleased(MouseEvent e) {
-                    
+
                 }
 
                 @Override
                 public void mouseEntered(MouseEvent e) {
-                    
-                    if(!budgetOpen && !actionOpen)
-                    {
+
+                    if (!budgetOpen && !actionOpen) {
                         HandleSound("hover.wav");
-                        island.setIcon(islandImages[index+3]);
+                        island.setIcon(islandImages[index + 3]);
                     }
                 }
 
                 @Override
                 public void mouseExited(MouseEvent e) {
-                    if(!budgetOpen && !actionOpen)
-                    {
-                        if(index != islandSelected)
-                        {
+                    if (!budgetOpen && !actionOpen) {
+                        if (index != islandSelected) {
                             island.setIcon(islandImages[index]);
                         }
                     }
-                    
+
                 }
             };
             island.addMouseListener(ml);
         }
         JButton switchView = createButton(0, 0, 100, 50, "Switch");
-        
+
         JButton exit = createButton(1820, 0, 100, 50, "Exit");
         exit.addActionListener(new ActionListener() {
             @Override
@@ -149,11 +157,11 @@ public class ExodusUI {
                 HandleSound("click.wav");
                 jf.dispatchEvent(new WindowEvent(jf, WindowEvent.WINDOW_CLOSING));
             }
-            
+
         });
-        
+
         JLabel background = createLabel(0, 0, 1920, 1080, new Color(134, 190, 255), null, false);
-        
+
         JPanel editBudget = new JPanel();
         editBudget.setLayout(null);
         editBudget.setSize(500, 400);
@@ -171,14 +179,13 @@ public class ExodusUI {
         military.setLocation(250, 325);
         military.setSize(200, 25);
         JLabel[] sliderLabels = new JLabel[4];
-        String[] sliderText = new String[] {"Public Services", "Greeen Energy", "Disaster Insurance", "Military Spending"};
-        for(int i = 0; i < 4; i++)
-        {
+        String[] sliderText = new String[]{"Public Services", "Greeen Energy", "Disaster Insurance", "Military Spending"};
+        for (int i = 0; i < 4; i++) {
             sliderLabels[i] = createLabel(25, 25 + 100 * i, 200, 50, null, sliderText[i], true);
             sliderLabels[i].setFont(new Font("Courier New", Font.PLAIN, 15));
             editBudget.add(sliderLabels[i]);
         }
-        
+
         JPanel actionPanel = new JPanel();
         actionPanel.setLayout(null);
         actionPanel.setSize(500, 400);
@@ -187,35 +194,28 @@ public class ExodusUI {
         actionButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(budgetOpen)
-                {
+                if (budgetOpen) {
                     budgetOpen = false;
-                    if(jobs.size() < 3)
-                    {
+                    if (jobs.size() < 3) {
                         jobs.add(Animation.globalAnimation(editBudget, 750, 1080, 0.5f));
                     }
-                    
+
                 }
-                if(actionOpen)
-                {
+                if (actionOpen) {
                     actionOpen = false;
-                    if(jobs.size() < 3)
-                    {
+                    if (jobs.size() < 3) {
                         jobs.add(Animation.globalAnimation(actionPanel, 750, 1080, 0.5f));
                     }
-                }
-                else
-                {
+                } else {
                     actionOpen = true;
-                    if(jobs.size() < 3)
-                    {
+                    if (jobs.size() < 3) {
                         jobs.add(Animation.globalAnimation(actionPanel, 750, 350, 0.5f));
                     }
-                    
+
                 }
                 HandleSound("click.wav");
             }
-            
+
         });
         JButton movePopulation = createButton(0, 0, 100, 50, "Move Population");
         movePopulation.addActionListener(new ActionListener() {
@@ -223,7 +223,7 @@ public class ExodusUI {
             public void actionPerformed(ActionEvent e) {
                 HandleSound("click.wav");
             }
-            
+
         });
         actionPanel.add(movePopulation);
         editBudget.add(publicServices);
@@ -233,37 +233,28 @@ public class ExodusUI {
         switchView.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(budgetOpen)
-                {
+                if (budgetOpen) {
                     budgetOpen = false;
-                    if(jobs.size() < 3)
-                    {
+                    if (jobs.size() < 3) {
                         jobs.add(Animation.globalAnimation(editBudget, 750, 1080, 0.5f));
                     }
-                    
+
                 }
-                if(actionOpen)
-                {
+                if (actionOpen) {
                     actionOpen = false;
-                    if(jobs.size() < 3)
-                    {
+                    if (jobs.size() < 3) {
                         jobs.add(Animation.globalAnimation(actionPanel, 750, 1080, 0.5f));
                     }
-                    
+
                 }
-                if(screen == 0)
-                {
-                    if(jobs.size() < 3)
-                    {
+                if (screen == 0) {
+                    if (jobs.size() < 3) {
                         jobs.add(Animation.globalAnimation(world, 0, 1080, 0.5f));
                         jobs.add(Animation.globalAnimation(hq, 0, 0, 0.5f));
                     }
                     screen = 1;
-                }
-                else if(screen == 1)
-                {
-                    if(jobs.size() < 3)
-                    {
+                } else if (screen == 1) {
+                    if (jobs.size() < 3) {
                         jobs.add(Animation.globalAnimation(hq, 0, 1080, 0.5f));
                         jobs.add(Animation.globalAnimation(world, 0, 0, 0.5f));
                     }
@@ -271,7 +262,7 @@ public class ExodusUI {
                 }
                 HandleSound("click.wav");
             }
-            
+
         });
         JLabel budgetBackground = createLabel(0, 0, 500, 250, Color.red, null, true);
         editBudget.add(budgetBackground);
@@ -279,42 +270,34 @@ public class ExodusUI {
         editBudgetButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(actionOpen)
-                {
+                if (actionOpen) {
                     actionOpen = false;
-                    if(jobs.size() < 3)
-                    {
+                    if (jobs.size() < 3) {
                         jobs.add(Animation.globalAnimation(actionPanel, 750, 1080, 0.5f));
                     }
-                    
+
                 }
-                if(budgetOpen)
-                {
+                if (budgetOpen) {
                     budgetOpen = false;
-                    if(jobs.size() < 3)
-                    {
+                    if (jobs.size() < 3) {
                         jobs.add(Animation.globalAnimation(editBudget, 750, 1080, 0.5f));
                     }
-                    game.getIslands()[islandSelected].setBudget(new float[] {(float) publicServices.getValue() / 100,(float) greenEnergy.getValue() / 100,(float) greenDefenses.getValue() / 100,(float) military.getValue() / 100});
-                    
-                }
-                else
-                {
+                    game.getIslands()[islandSelected].setBudget(new float[]{(float) publicServices.getValue() / 100, (float) greenEnergy.getValue() / 100, (float) greenDefenses.getValue() / 100, (float) military.getValue() / 100});
+
+                } else {
                     budgetOpen = true;
                     publicServices.setValue(Math.round(game.getIslands()[islandSelected].getBudget()[0] * 100));
                     greenEnergy.setValue(Math.round(game.getIslands()[islandSelected].getBudget()[1] * 100));
                     greenDefenses.setValue(Math.round(game.getIslands()[islandSelected].getBudget()[2] * 100));
                     military.setValue(Math.round(game.getIslands()[islandSelected].getBudget()[3] * 100));
-                    if(jobs.size() < 3)
-                    {
+                    if (jobs.size() < 3) {
                         jobs.add(Animation.globalAnimation(editBudget, 750, 350, 0.5f));
                     }
-                    
-                    
+
                 }
                 HandleSound("click.wav");
             }
-            
+
         });
         world.add(editBudgetButton);
         world.add(actionButton);
@@ -334,15 +317,15 @@ public class ExodusUI {
         world.add(worldText);
         world.add(happinessBar);
         world.add(localText);
-        
+
         world.add(localMenu);
         world.add(worldMenu);
-        
+
         world.add(island1);
         world.add(island2);
         world.add(island3);
         world.add(background);
-        
+
         jf.add(hq);
         jf.add(worldBackground);
         jf.setSize(1920, 1080);
@@ -352,8 +335,7 @@ public class ExodusUI {
         jf.setUndecorated(true);
         jf.revalidate();
         jf.setVisible(true);
-        
-        
+
         /*for(int i = 0; i < 250; i++) //Just for looking at game data
         {
             game.nextYear();
@@ -370,39 +352,32 @@ public class ExodusUI {
         System.out.println(csvFile);*/
         ScheduledExecutorService animation = Executors.newSingleThreadScheduledExecutor();
         animation.scheduleAtFixedRate(() -> {
-            try
-            {
-                if(jobs.size() >= 1)
-                {
+            try {
+                if (jobs.size() >= 1) {
                     Animation nextInQueue = jobs.get(0);
                     int newX = nextInQueue.calculateLocation()[0];
                     int newY = nextInQueue.calculateLocation()[1];
                     nextInQueue.object.setLocation(newX, newY);
-                    
-                    int[] currentLocation = new int[] {nextInQueue.object.getLocation().x, nextInQueue.object.getLocation().y};
-                    if(currentLocation[0] == nextInQueue.targetLocation[0] && currentLocation[1] == nextInQueue.targetLocation[1])
-                    {
+
+                    int[] currentLocation = new int[]{nextInQueue.object.getLocation().x, nextInQueue.object.getLocation().y};
+                    if (currentLocation[0] == nextInQueue.targetLocation[0] && currentLocation[1] == nextInQueue.targetLocation[1]) {
                         jobs.remove(0);
-                        if(jobs.size() > 0)
-                        {
+                        if (jobs.size() > 0) {
                             Animation next = jobs.get(0);
                             next.startTime = System.currentTimeMillis();
-                            next.startLocation = new int[] {next.object.getLocation().x, next.object.getLocation().y};
+                            next.startLocation = new int[]{next.object.getLocation().x, next.object.getLocation().y};
                             jobs.set(0, next);
                         }
                     }
                 }
-            }
-            catch(Exception e)
-            {
-                
+            } catch (Exception e) {
+
             }
         }, 0, 1, TimeUnit.NANOSECONDS);
-        
+
         ScheduledExecutorService gameClock = Executors.newSingleThreadScheduledExecutor();
         gameClock.scheduleAtFixedRate(() -> {
-            try
-            {
+            try {
                 String local = "<html>";
                 local += "<i>Island:</i> " + islandSelected;
                 local += "<br><i>Population in millions:</i> " + game.getIslands()[islandSelected].getPopulation();
@@ -411,62 +386,54 @@ public class ExodusUI {
                 local += "<br><i>Crime Rate:</i> " + game.getIslands()[islandSelected].getCrimeRate();
                 local += "<br><i>Food Access:</i> " + game.getIslands()[islandSelected].getFoodSecurity();
                 local += "<br><i>Energy Access:</i> " + game.getIslands()[islandSelected].getEnergySecurity();
-                local += "<br><i>Employment Rate:</i> " + game.getIslands()[islandSelected].getJobSecurity();
-                local += "<br><i>Happiness:</i> " + game.getIslands()[islandSelected].getHappiness();
+//                local += "<br><i>Employment Rate:</i> " + game.getIslands()[islandSelected].getJobSecurity();
+//                local += "<br><i>Happiness:</i> " + game.getIslands()[islandSelected].getHappiness();
 //                local += "<br><i>EditBudgetOpen:</i> " + budgetOpen;
 //                local += "<br><i>InvestOpen:</i> " + actionOpen;
 //                local += "<br><i>Land Area in 1000km3:</i> " + game.getIslands()[islandSelected].getLandArea()/1000 + "</html>";
                 localText.setText(local);
                 localText.setSize(localText.getPreferredSize());
                 happinessBar.setValue((int) Math.round(game.getIslands()[islandSelected].getHappiness() * 100));
-            }
-            catch(Exception e)
-            {
+                employmentBar.setValue((int) Math.round(game.getIslands()[islandSelected].getJobSecurity() * 100));
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }, 0, 10, TimeUnit.MILLISECONDS);
-        
+
         ScheduledExecutorService dataSync = Executors.newSingleThreadScheduledExecutor();
         dataSync.scheduleAtFixedRate(() -> {
-            try
-            {
-                if(!budgetOpen && !actionOpen && !(game.getWorldTime() > game.getWorldEndTime()))
-                {
+            try {
+                if (!budgetOpen && !actionOpen && !(game.getWorldTime() > game.getWorldEndTime())) {
                     game.nextYear();
                 }
                 String worldTextSummary = "<html>";
-                for(int i = 0; i < 4; i++)
-                {
-                    if(i != 2)
-                    {
-                        worldTextSummary += game.history.get(game.history.size()-1)[i] + "<br>";
+                for (int i = 0; i < 4; i++) {
+                    if (i != 2) {
+                        worldTextSummary += game.history.get(game.history.size() - 1)[i] + "<br>";
                     }
                 }
                 worldText.setText(worldTextSummary + "</html>");
-                
-            }
-            catch(Exception e)
-            {
+
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }, 0, (long) 800, TimeUnit.MILLISECONDS);
-        
+
     }
-    
+
     public ImageIcon readImage(String fileName, int width, int height) {
         //File must be in /Resources/!
         BufferedImage image = null;
         try {
             image = ImageIO.read((ExodusUI.class.getResourceAsStream("/Resources/" + fileName)));
         } catch (Exception e) {
-            
+
         }
         Image sImage = image.getScaledInstance(width, height, Image.SCALE_SMOOTH);
         return new ImageIcon(sImage);
     }
-    
-    public JLabel createLabel(int x, int y, int width, int height, Object background, String text, boolean transparent)
-    {
+
+    public JLabel createLabel(int x, int y, int width, int height, Object background, String text, boolean transparent) {
         JLabel label = new JLabel();
         label.setVerticalTextPosition(JLabel.CENTER);
         label.setVerticalAlignment(SwingConstants.TOP);
@@ -476,32 +443,25 @@ public class ExodusUI {
         label.setSize(width, height);
         label.setVisible(true);
         label.setOpaque(!transparent);
-        if(background != null)
-        {
-            if(background.getClass() == Color.class)
-            {
+        if (background != null) {
+            if (background.getClass() == Color.class) {
                 label.setBackground((Color) background);
-            }
-            else if(background.getClass() == ImageIcon.class)
-            {
+            } else if (background.getClass() == ImageIcon.class) {
                 label.setIcon((ImageIcon) background);
             }
-        }
-        else
-        {
+        } else {
             label.setOpaque(false);
         }
         return label;
     }
-    
-    public JButton createButton(int x, int y, int width, int height, String text)
-    {
+
+    public JButton createButton(int x, int y, int width, int height, String text) {
         JButton button = new JButton(text);
         button.setLocation(x, y);
         button.setSize(width, height);
         return button;
     }
-    
+
     public void HandleSound(String fileName) {
         try {
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(ExodusUI.class.getResourceAsStream("/Resources/" + fileName));
@@ -513,7 +473,7 @@ public class ExodusUI {
             System.out.println(e);
         }
     }
-    
+
     public static void main(String[] args) {
         ExodusUI ui = new ExodusUI();
     }
