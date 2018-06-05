@@ -445,7 +445,7 @@ public class ExodusUI {
         //File must be in /Resources/!
         BufferedImage image = null;
         try {
-            image = ImageIO.read((Exodus.class.getResourceAsStream("/Resources/" + fileName)));
+            image = ImageIO.read((ExodusUI.class.getResourceAsStream("/Resources/" + fileName)));
         } catch (Exception e) {
             
         }
@@ -492,7 +492,7 @@ public class ExodusUI {
     
     public void HandleSound(String fileName) {
         try {
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(Exodus.class.getResourceAsStream("/Resources/" + fileName));
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(ExodusUI.class.getResourceAsStream("/Resources/" + fileName));
             Clip clip = AudioSystem.getClip();
             clip.open(audioInputStream);
             clip.start();
