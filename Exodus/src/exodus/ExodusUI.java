@@ -80,6 +80,18 @@ public class ExodusUI {
         islands.add(island1);
         islands.add(island2);
         islands.add(island3);
+        JLabel crimeLabel = createLabel(10, 730, 100, 30, null, "Crime Rate", true);
+        world.add(crimeLabel);
+        JProgressBar crimeBar = new JProgressBar();
+        crimeBar.setLocation(125, 730);
+        crimeBar.setSize(250, 15);
+        world.add(crimeBar);
+        JLabel foodLabel = createLabel(10, 760, 100, 30, null, "Energy Access", true);
+        world.add(foodLabel);
+        JProgressBar foodBar = new JProgressBar();
+        foodBar.setLocation(125, 760);
+        foodBar.setSize(250, 15);
+        world.add(foodBar);
         JLabel energyLabel = createLabel(10, 790, 100, 30, null, "Energy Access", true);
         world.add(energyLabel);
         JProgressBar energyBar = new JProgressBar();
@@ -383,9 +395,8 @@ public class ExodusUI {
                 local += "<br><i>Population in millions:</i> " + game.getIslands()[islandSelected].getPopulation();
                 local += "<br><i>Money in millions:</i> " + game.getIslands()[islandSelected].getMoney();
                 local += "<br><i>GDP Per Capita in thousands:</i> " + game.getIslands()[islandSelected].getGdpPerCapita();
-                local += "<br><i>Crime Rate:</i> " + game.getIslands()[islandSelected].getCrimeRate();
-                local += "<br><i>Food Access:</i> " + game.getIslands()[islandSelected].getFoodSecurity();
-                local += "<br><i>Energy Access:</i> " + game.getIslands()[islandSelected].getEnergySecurity();
+//                local += "<br><i>Crime Rate:</i> " + game.getIslands()[islandSelected].getCrimeRate();
+//                local += "<br><i>Food Access:</i> " + game.getIslands()[islandSelected].getFoodSecurity();
 //                local += "<br><i>Employment Rate:</i> " + game.getIslands()[islandSelected].getJobSecurity();
 //                local += "<br><i>Happiness:</i> " + game.getIslands()[islandSelected].getHappiness();
 //                local += "<br><i>EditBudgetOpen:</i> " + budgetOpen;
@@ -395,6 +406,9 @@ public class ExodusUI {
                 localText.setSize(localText.getPreferredSize());
                 happinessBar.setValue((int) Math.round(game.getIslands()[islandSelected].getHappiness() * 100));
                 employmentBar.setValue((int) Math.round(game.getIslands()[islandSelected].getJobSecurity() * 100));
+                energyBar.setValue((int) Math.round(game.getIslands()[islandSelected].getEnergySecurity() * 100));
+                foodBar.setValue((int) Math.round(game.getIslands()[islandSelected].getFoodSecurity() * 100));
+                crimeBar.setValue((int) Math.round(game.getIslands()[islandSelected].getCrimeRate() * 100));
             } catch (Exception e) {
                 e.printStackTrace();
             }
