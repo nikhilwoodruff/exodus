@@ -80,33 +80,38 @@ public class ExodusUI {
         islands.add(island1);
         islands.add(island2);
         islands.add(island3);
-        JLabel crimeLabel = createLabel(10, 730, 100, 30, null, "Crime Rate", true);
+        JLabel crimeLabel = createLabel(10, 730, 100, 30, null, "Crime Rate", true, 12);
         world.add(crimeLabel);
         JProgressBar crimeBar = new JProgressBar();
+        crimeBar.setStringPainted(true);
         crimeBar.setLocation(125, 730);
         crimeBar.setSize(250, 15);
         world.add(crimeBar);
-        JLabel foodLabel = createLabel(10, 760, 100, 30, null, "Energy Access", true);
+        JLabel foodLabel = createLabel(10, 760, 100, 30, null, "Energy Access", true, 12);
         world.add(foodLabel);
         JProgressBar foodBar = new JProgressBar();
+        foodBar.setStringPainted(true);
         foodBar.setLocation(125, 760);
         foodBar.setSize(250, 15);
         world.add(foodBar);
-        JLabel energyLabel = createLabel(10, 790, 100, 30, null, "Energy Access", true);
+        JLabel energyLabel = createLabel(10, 790, 100, 30, null, "Energy Access", true, 12);
         world.add(energyLabel);
         JProgressBar energyBar = new JProgressBar();
+        energyBar.setStringPainted(true);
         energyBar.setLocation(125, 790);
         energyBar.setSize(250, 15);
         world.add(energyBar);
-        JLabel employmentLabel = createLabel(10, 820, 100, 30, null, "Employment", true);
+        JLabel employmentLabel = createLabel(10, 820, 100, 30, null, "Employment", true, 12);
         world.add(employmentLabel);
         JProgressBar employmentBar = new JProgressBar();
+        employmentBar.setStringPainted(true);
         employmentBar.setLocation(125, 820);
         employmentBar.setSize(250, 15);
         world.add(employmentBar);
-        JLabel happinessLabel = createLabel(10, 850, 100, 30, null, "Happiness", true);
+        JLabel happinessLabel = createLabel(10, 850, 100, 30, null, "Happiness", true, 12);
         world.add(happinessLabel);
         JProgressBar happinessBar = new JProgressBar();
+        happinessBar.setStringPainted(true);
         happinessBar.setLocation(125, 850);
         happinessBar.setSize(250, 15);
         JLabel localText = createLabel(25, 650, 350, 400, null, null, false);
@@ -452,6 +457,27 @@ public class ExodusUI {
         label.setVerticalTextPosition(JLabel.CENTER);
         label.setVerticalAlignment(SwingConstants.TOP);
         label.setFont(new Font("Courier New", Font.PLAIN, 18));
+        label.setText(text);
+        label.setLocation(x, y);
+        label.setSize(width, height);
+        label.setVisible(true);
+        label.setOpaque(!transparent);
+        if (background != null) {
+            if (background.getClass() == Color.class) {
+                label.setBackground((Color) background);
+            } else if (background.getClass() == ImageIcon.class) {
+                label.setIcon((ImageIcon) background);
+            }
+        } else {
+            label.setOpaque(false);
+        }
+        return label;
+    }
+    public JLabel createLabel(int x, int y, int width, int height, Object background, String text, boolean transparent, int fontSize) {
+        JLabel label = new JLabel();
+        label.setVerticalTextPosition(JLabel.CENTER);
+        label.setVerticalAlignment(SwingConstants.TOP);
+        label.setFont(new Font("Courier New", Font.PLAIN, fontSize));
         label.setText(text);
         label.setLocation(x, y);
         label.setSize(width, height);
