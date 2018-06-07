@@ -127,13 +127,17 @@ public class ExodusData {
         worldTime++;
         climateChange += 1 / worldEndTime;
     }
-    public void movePopulation(int fromIslandIndex, int toIslandIndex, int size)
+    public void movePopulation(int fromIslandIndex, int toIslandIndex, float size) throws Exception
     {
-        if(islands[fromIslandIndex].getPopulation() > size)
+        if(islands[fromIslandIndex].getPopulation() > size && size > 0)
         {
             islands[fromIslandIndex].changePopulation(-size);
             islands[toIslandIndex].changePopulation(size);
             islands[fromIslandIndex].pay(10 / islands[fromIslandIndex].getGdpPerCapita());
+        }
+        else
+        {
+            throw new Exception();
         }
     }
     void printYearlySummary() //Just for csv data analysis

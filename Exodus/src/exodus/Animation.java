@@ -20,6 +20,7 @@ public class Animation {
     int[] startLocation;
     long startTime;
     float duration;
+    float easing;
     
     public int[] calculateLocation()
     {
@@ -32,7 +33,8 @@ public class Animation {
         {
             progress = 1;
         }
-        progress = easeInOut(progress, 4.5f);
+        progress = easeInOut(progress, easing);
+        
         int x;
         int y;
         x = (int) Math.round(startLocation[0] + (targetLocation[0] - startLocation[0]) * progress);
@@ -50,6 +52,19 @@ public class Animation {
         anim.targetLocation = new int[] {targetX, targetY};
         anim.startTime = System.currentTimeMillis();
         anim.duration = duration;
+        anim.easing = 4.5f;
+        return anim;
+    }
+    public static Animation globalAnimation(JComponent object, int targetX, int targetY, float duration, float easing)
+    {
+        Animation anim = new Animation();
+        anim.global = true;
+        anim.object = object;
+        anim.startLocation = new int[] {object.getLocation().x, object.getLocation().y};
+        anim.targetLocation = new int[] {targetX, targetY};
+        anim.startTime = System.currentTimeMillis();
+        anim.duration = duration;
+        anim.easing = easing;
         return anim;
     }
     

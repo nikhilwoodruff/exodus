@@ -21,7 +21,7 @@ public class Island {
     private float happiness;
     private float climateChange;
     private float climateImpact;
-    
+    boolean[] justHitMilestone = new boolean[] {false, false, false, false, false, false, false, false};
     private float taxRate;
     private float[] budget;
 
@@ -53,11 +53,11 @@ public class Island {
         return population;
     }
 
-    public void setPopulation(int population) {
+    public void setPopulation(float population) {
         this.population = population;
     }
     
-    public void changePopulation(int number) {
+    public void changePopulation(float number) {
         this.population += number;
     }
     
@@ -203,13 +203,13 @@ public class Island {
     float addToClamped(float variable, double amount, float min, float max)
     {
         float result = variable + (float) amount;
-        if(result < 0)
+        if(result < min)
         {
-            result = 0;
+            result = min;
         }
-        else if(result > 1)
+        else if(result > max)
         {
-            result = 1;
+            result = max;
         }
         return result;
     }

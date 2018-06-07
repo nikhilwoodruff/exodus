@@ -46,6 +46,7 @@ public class ExodusUI {
     boolean budgetOpen;
     boolean actionOpen;
     List<Animation> jobs = new ArrayList<Animation>();
+    List<Animation> jobs2 = new ArrayList<Animation>();
 
     public ExodusUI() {
         ImageIcon[] islandImages = new ImageIcon[6];
@@ -82,6 +83,7 @@ public class ExodusUI {
         islands.add(island1);
         islands.add(island2);
         islands.add(island3);
+        JLabel bannerText = createLabel(0, 0, 1000, 40, null, "", true, 26);
         JLabel crimeLabel = createLabel(10, 730, 100, 30, null, "Crime Rate", true, 12);
         world.add(crimeLabel);
         JProgressBar crimeBar = new JProgressBar();
@@ -167,9 +169,9 @@ public class ExodusUI {
             };
             island.addMouseListener(ml);
         }
-        JButton switchView = createButton(0, 0, 100, 50, "Switch");
+        JButton switchView = createButton(0, 50, 100, 50, "Switch");
 
-        JButton exit = createButton(1820, 0, 100, 50, "Exit");
+        JButton exit = createButton(1820, 50, 100, 50, "Exit");
         exit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -221,7 +223,7 @@ public class ExodusUI {
                 }
                 catch(Exception ex)
                 {
-                    
+                    alert("Invalid population number entered", bannerText, jobs2);
                 }
                 HandleSound("click.wav");
             }
@@ -229,7 +231,7 @@ public class ExodusUI {
         });
         actionPanel.add(movePopulation1);
         JButton movePopulation2 = createButton(200, 10, 125, 50, "Move to Island 2");
-        movePopulation1.addActionListener(new ActionListener() {
+        movePopulation2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try
@@ -238,7 +240,7 @@ public class ExodusUI {
                 }
                 catch(Exception ex)
                 {
-                    
+                    alert("Invalid population number entered", bannerText, jobs2);
                 }
                 HandleSound("click.wav");
             }
@@ -246,7 +248,7 @@ public class ExodusUI {
         });
         actionPanel.add(movePopulation2);
         JButton movePopulation3 = createButton(325, 10, 125, 50, "Move to Island 3");
-        movePopulation1.addActionListener(new ActionListener() {
+        movePopulation3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try
@@ -255,7 +257,7 @@ public class ExodusUI {
                 }
                 catch(Exception ex)
                 {
-                    
+                    alert("Invalid population number entered", bannerText, jobs2);
                 }
                 HandleSound("click.wav");
             }
@@ -315,6 +317,19 @@ public class ExodusUI {
         JComboBox investBox = new JComboBox(new String[] {"Nuclear fusion", "Fossil fuels", "Farming equipment", "Biofuels", "Stealth bombers for the RAF", "Facebook bots", "Riot control"});
         investBox.setLocation(75, 70);
         investBox.setSize(250, 50);
+        JButton investButton = createButton(335, 70, 100, 50, "Invest");
+        
+        bannerText.setOpaque(false);
+        bannerText.setForeground(Color.WHITE);
+        investButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                HandleSound("click.wav");
+                alert(investBox.getSelectedItem().toString(), bannerText, jobs2);
+            }
+
+        });
+        actionPanel.add(investButton);
         actionPanel.add(investBox);
         actionPanel.add(investBox);
         actionPanel.add(investIn);
@@ -394,6 +409,12 @@ public class ExodusUI {
         });
         world.add(editBudgetButton);
         world.add(actionButton);
+        jf.add(switchView);
+        
+        JLabel banner = createLabel(0, 0, 1920, 50, Color.RED, null, false);
+        
+        
+        
         JLabel rocketLabel = createLabel(50, 50, 400, 900, null, "Rocket", true);
         BufferedImage img = new BufferedImage(400, 900, BufferedImage.TYPE_INT_RGB);
         Graphics g = img.getGraphics();
@@ -404,7 +425,8 @@ public class ExodusUI {
         jf.add(editBudget);
         jf.add(actionPanel);
         jf.add(exit);
-        jf.add(switchView);
+        world.add(bannerText);
+        world.add(banner);
         jf.add(world);
         hq.add(hqBackground);
         world.add(worldText);
@@ -445,7 +467,9 @@ public class ExodusUI {
         System.out.println(csvFile);*/
         ScheduledExecutorService animation = Executors.newSingleThreadScheduledExecutor();
         animation.scheduleAtFixedRate(() -> {
+            
             try {
+                switchView.setLocation(switchView.getLocation());
                 if (jobs.size() >= 1) {
                     Animation nextInQueue = jobs.get(0);
                     int newX = nextInQueue.calculateLocation()[0];
@@ -463,30 +487,63 @@ public class ExodusUI {
                         }
                     }
                 }
+                if (jobs2.size() >= 1) {
+                    Animation nextInQueue = jobs2.get(0);
+                    int newX = nextInQueue.calculateLocation()[0];
+                    int newY = nextInQueue.calculateLocation()[1];
+                    nextInQueue.object.setLocation(newX, newY);
+
+                    int[] currentLocation = new int[]{nextInQueue.object.getLocation().x, nextInQueue.object.getLocation().y};
+                    if (currentLocation[0] == nextInQueue.targetLocation[0] && currentLocation[1] == nextInQueue.targetLocation[1]) {
+                        jobs2.remove(0);
+                        if (jobs2.size() > 0) {
+                            Animation next = jobs2.get(0);
+                            next.startTime = System.currentTimeMillis();
+                            next.startLocation = new int[]{next.object.getLocation().x, next.object.getLocation().y};
+                            jobs2.set(0, next);
+                        }
+                    }
+                }
+                
             } catch (Exception e) {
 
             }
         }, 0, 1, TimeUnit.NANOSECONDS);
-
+        
         ScheduledExecutorService gameClock = Executors.newSingleThreadScheduledExecutor();
         gameClock.scheduleAtFixedRate(() -> {
             try {
+                
+                float[] values = new float[] {game.getIslands()[islandSelected].getPopulation(), game.getIslands()[islandSelected].getMoney(), game.getIslands()[islandSelected].getGdpPerCapita(), Math.round(game.getIslands()[islandSelected].getHappiness() * 100), Math.round(game.getIslands()[islandSelected].getJobSecurity() * 100), Math.round(game.getIslands()[islandSelected].getEnergySecurity() * 100), Math.round(game.getIslands()[islandSelected].getFoodSecurity() * 100), Math.round(game.getIslands()[islandSelected].getCrimeRate() * 100)};
+                String[] descriptions = new String[] {"population", "money", "GDP per capita", "happiness", "employment level", "energy access", "food availability", "crime rate"};
                 String local = "<html>";
                 local += "Island: " + islandSelected;
-                local += "<br>Population in millions: " + game.getIslands()[islandSelected].getPopulation();
-                local += "<br>Money in millions: " + game.getIslands()[islandSelected].getMoney();
-                local += "<br>GDP Per Capita in thousands: " + game.getIslands()[islandSelected].getGdpPerCapita();
+                local += "<br>Population in millions: " + values[0];
+                local += "<br>Money in millions: " + values[1];
+                local += "<br>GDP Per Capita in thousands: " + values[2];
                 localText.setText(local);
                 localText.setSize(localText.getPreferredSize());
-                happinessBar.setValue((int) Math.round(game.getIslands()[islandSelected].getHappiness() * 100));
-                employmentBar.setValue((int) Math.round(game.getIslands()[islandSelected].getJobSecurity() * 100));
-                energyBar.setValue((int) Math.round(game.getIslands()[islandSelected].getEnergySecurity() * 100));
-                foodBar.setValue((int) Math.round(game.getIslands()[islandSelected].getFoodSecurity() * 100));
-                crimeBar.setValue((int) Math.round(game.getIslands()[islandSelected].getCrimeRate() * 100));
+                happinessBar.setValue((int) values[3]);
+                employmentBar.setValue((int) values[4]);
+                energyBar.setValue((int) values[5]);
+                foodBar.setValue((int) values[6]);
+                crimeBar.setValue((int) values[7]);
+                
+                /*for(int i = 0; i < 8; i++)
+                {
+                    if(!game.getIslands()[islandSelected].justHitMilestone[i] && (values[i] == 0 || values[i] == 1))
+                    {
+                        alert("Island" + (islandSelected + 1) + "'s " + descriptions[i] + " has hit " + values[i], bannerText, jobs2); 
+                        game.getIslands()[islandSelected].justHitMilestone[i] = true;
+                        System.out.println(jobs2.size());
+                        
+                    }
+                }*/
+                
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }, 0, 10, TimeUnit.MILLISECONDS);
+        }, 0, 1, TimeUnit.MILLISECONDS);
 
         ScheduledExecutorService dataSync = Executors.newSingleThreadScheduledExecutor();
         dataSync.scheduleAtFixedRate(() -> {
@@ -505,7 +562,7 @@ public class ExodusUI {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }, 0, (long) 800, TimeUnit.MILLISECONDS);
+        }, 0, (long) 80, TimeUnit.MILLISECONDS);
 
     }
 
@@ -585,5 +642,11 @@ public class ExodusUI {
 
     public static void main(String[] args) {
         ExodusUI ui = new ExodusUI();
+    }
+    public void alert(String alert, JLabel bannerText, List<Animation> jobs)
+    {
+        bannerText.setText("<html><b>" + alert + "</b></html>");
+        bannerText.setLocation(0, 5);
+        jobs.add(Animation.globalAnimation(bannerText, 1920, 10, 6, 1.05f));
     }
 }
