@@ -26,11 +26,13 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JSlider;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 /**
@@ -114,8 +116,8 @@ public class ExodusUI {
         happinessBar.setStringPainted(true);
         happinessBar.setLocation(125, 850);
         happinessBar.setSize(250, 15);
-        JLabel localText = createLabel(25, 650, 350, 400, null, null, false);
-        JLabel worldText = createLabel(1545, 650, 350, 400, null, null, false);
+        JLabel localText = createLabel(10, 650, 350, 400, null, null, false, 15);
+        JLabel worldText = createLabel(1545, 650, 350, 400, null, null, false, 15);
         for (JLabel island : islands) //Event listeners for mouse hover, click
         {
             final int index = islands.indexOf(island);
@@ -202,11 +204,65 @@ public class ExodusUI {
             sliderLabels[i].setFont(new Font("Courier New", Font.PLAIN, 15));
             editBudget.add(sliderLabels[i]);
         }
-
         JPanel actionPanel = new JPanel();
         actionPanel.setLayout(null);
         actionPanel.setSize(500, 400);
         actionPanel.setLocation(750, 1080);
+        JTextField populationMove = new JTextField();
+        populationMove.setLocation(10, 10);
+        populationMove.setSize(50, 50);
+        JButton movePopulation1 = createButton(75, 10, 125, 50, "Move to Island 1");
+        movePopulation1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try
+                {
+                    game.movePopulation(islandSelected, 0, Integer.parseInt(populationMove.getText()));
+                }
+                catch(Exception ex)
+                {
+                    
+                }
+                HandleSound("click.wav");
+            }
+
+        });
+        actionPanel.add(movePopulation1);
+        JButton movePopulation2 = createButton(200, 10, 125, 50, "Move to Island 2");
+        movePopulation1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try
+                {
+                    game.movePopulation(islandSelected, 1, Integer.parseInt(populationMove.getText()));
+                }
+                catch(Exception ex)
+                {
+                    
+                }
+                HandleSound("click.wav");
+            }
+
+        });
+        actionPanel.add(movePopulation2);
+        JButton movePopulation3 = createButton(325, 10, 125, 50, "Move to Island 3");
+        movePopulation1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try
+                {
+                    game.movePopulation(islandSelected, 2, Integer.parseInt(populationMove.getText()));
+                }
+                catch(Exception ex)
+                {
+                    
+                }
+                HandleSound("click.wav");
+            }
+
+        });
+        actionPanel.add(movePopulation3);
+        
         JButton actionButton = createButton(150, 900, 100, 50, "Actions");
         actionButton.addActionListener(new ActionListener() {
             @Override
@@ -228,21 +284,41 @@ public class ExodusUI {
                     if (jobs.size() < 3) {
                         jobs.add(Animation.globalAnimation(actionPanel, 750, 350, 0.5f));
                     }
+                    switch(islandSelected)
+                    {
+                        case 0:
+                            movePopulation1.setEnabled(false);
+                            movePopulation2.setEnabled(true);
+                            movePopulation3.setEnabled(true);
+                            break;
+                        case 1:
+                            movePopulation1.setEnabled(true);
+                            movePopulation2.setEnabled(false);
+                            movePopulation3.setEnabled(true);
+                            break;
+                        case 2:
+                            movePopulation1.setEnabled(true);
+                            movePopulation2.setEnabled(true);
+                            movePopulation3.setEnabled(false);
+                            break;
+                    }
 
                 }
                 HandleSound("click.wav");
             }
 
         });
-        JButton movePopulation = createButton(0, 0, 100, 50, "Move Population");
-        movePopulation.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                HandleSound("click.wav");
-            }
-
-        });
-        actionPanel.add(movePopulation);
+        
+        JTextField investIn = new JTextField();
+        investIn.setLocation(10, 70);
+        investIn.setSize(50, 50);
+        JComboBox investBox = new JComboBox(new String[] {"Nuclear fusion", "Fossil fuels", "Farming equipment", "Biofuels", "Stealth bombers for the RAF", "Facebook bots", "Riot control"});
+        investBox.setLocation(75, 70);
+        investBox.setSize(250, 50);
+        actionPanel.add(investBox);
+        actionPanel.add(investBox);
+        actionPanel.add(investIn);
+        actionPanel.add(populationMove);
         editBudget.add(publicServices);
         editBudget.add(greenEnergy);
         editBudget.add(greenDefenses);
@@ -396,17 +472,10 @@ public class ExodusUI {
         gameClock.scheduleAtFixedRate(() -> {
             try {
                 String local = "<html>";
-                local += "<i>Island:</i> " + islandSelected;
-                local += "<br><i>Population in millions:</i> " + game.getIslands()[islandSelected].getPopulation();
-                local += "<br><i>Money in millions:</i> " + game.getIslands()[islandSelected].getMoney();
-                local += "<br><i>GDP Per Capita in thousands:</i> " + game.getIslands()[islandSelected].getGdpPerCapita();
-//                local += "<br><i>Crime Rate:</i> " + game.getIslands()[islandSelected].getCrimeRate();
-//                local += "<br><i>Food Access:</i> " + game.getIslands()[islandSelected].getFoodSecurity();
-//                local += "<br><i>Employment Rate:</i> " + game.getIslands()[islandSelected].getJobSecurity();
-//                local += "<br><i>Happiness:</i> " + game.getIslands()[islandSelected].getHappiness();
-//                local += "<br><i>EditBudgetOpen:</i> " + budgetOpen;
-//                local += "<br><i>InvestOpen:</i> " + actionOpen;
-//                local += "<br><i>Land Area in 1000km3:</i> " + game.getIslands()[islandSelected].getLandArea()/1000 + "</html>";
+                local += "Island: " + islandSelected;
+                local += "<br>Population in millions: " + game.getIslands()[islandSelected].getPopulation();
+                local += "<br>Money in millions: " + game.getIslands()[islandSelected].getMoney();
+                local += "<br>GDP Per Capita in thousands: " + game.getIslands()[islandSelected].getGdpPerCapita();
                 localText.setText(local);
                 localText.setSize(localText.getPreferredSize());
                 happinessBar.setValue((int) Math.round(game.getIslands()[islandSelected].getHappiness() * 100));

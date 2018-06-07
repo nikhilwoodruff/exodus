@@ -129,9 +129,12 @@ public class ExodusData {
     }
     public void movePopulation(int fromIslandIndex, int toIslandIndex, int size)
     {
-        islands[fromIslandIndex].changePopulation(-size);
-        islands[toIslandIndex].changePopulation(size);
-        islands[fromIslandIndex].pay(10 / islands[fromIslandIndex].getGdpPerCapita());
+        if(islands[fromIslandIndex].getPopulation() > size)
+        {
+            islands[fromIslandIndex].changePopulation(-size);
+            islands[toIslandIndex].changePopulation(size);
+            islands[fromIslandIndex].pay(10 / islands[fromIslandIndex].getGdpPerCapita());
+        }
     }
     void printYearlySummary() //Just for csv data analysis
     {
