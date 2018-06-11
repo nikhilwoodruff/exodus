@@ -140,6 +140,47 @@ public class ExodusData {
             throw new Exception();
         }
     }
+    public void investIn(float amount, int choice)
+    {
+        for(Island i : islands)
+        {
+            switch(choice)
+            {
+                case 0:
+                    i.setEnergySecurity(i.addToClamped(i.getEnergySecurity(), 25));
+                    i.setJobSecurity(i.addToClamped(i.getJobSecurity(), -15));
+                    break;
+                case 1:
+                    i.setEnergySecurity(i.addToClamped(i.getEnergySecurity(), -20));
+                    i.setJobSecurity(i.addToClamped(i.getJobSecurity(), 30));
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    break;
+                case 4:
+                    break;
+                case 5:
+                    break;
+                case 6:
+                    break;
+            }
+        }
+    }
+    public boolean[] getDestroyed()
+    {
+        boolean[] destroyed = {false, false, false};
+        float[] score = new float[3];
+        for(int i = 0; i < 3; i++)
+        {
+            score[i] = ((1 - islands[i].getCrimeRate()) + islands[i].getEnergySecurity() + islands[i].getFoodSecurity() + islands[i].getJobSecurity() + islands[i].getHappiness()) / 5;
+            if(score[i] < 0.4)
+            {
+                destroyed[i] = true;
+            }
+        }
+        return destroyed;
+    }
     void printYearlySummary() //Just for csv data analysis
     {
         String[] historicEntry = new String[37];

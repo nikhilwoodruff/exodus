@@ -48,13 +48,16 @@ public class ExodusUI {
     List<Animation> jobs = new ArrayList<Animation>();
 
     public ExodusUI() {
-        ImageIcon[] islandImages = new ImageIcon[6];
+        ImageIcon[] islandImages = new ImageIcon[9];
         islandImages[0] = readImage("island1.png", 450, 450);
         islandImages[1] = readImage("island2.png", 450, 450);
         islandImages[2] = readImage("island3.png", 450, 450);
         islandImages[3] = readImage("altIsland1.png", 450, 450);
         islandImages[4] = readImage("altIsland2.png", 450, 450);
         islandImages[5] = readImage("altIsland3.png", 450, 450);
+        islandImages[6] = readImage("destroyedisland1.png", 450, 450);
+        islandImages[7] = readImage("destroyedisland2.png", 450, 450);
+        islandImages[8] = readImage("destroyedisland3.png", 450, 450);
         ExodusData game = new ExodusData(0.5f, 2);
         actionOpen = false;
         budgetOpen = false;
@@ -68,6 +71,14 @@ public class ExodusUI {
         world.setLayout(null);
         world.setSize(1920, 1080);
         world.setLocation(0, 0);
+        JLabel messages = createLabel(1520, 150, 400, 400, new Color(175, 175, 175), null, false);
+        JLabel[] messageHolders = new JLabel[16];
+        for(int i = 0; i < 16; i++)
+        {
+            messageHolders[i] = createLabel(1520, 150 + i * 25, 400, 50, null, null, false, 18);
+            world.add(messageHolders[i]);
+        }
+        world.add(messages);
         JPanel hq = new JPanel();
         hq.setLayout(null);
         hq.setSize(1920, 1080);
@@ -82,9 +93,9 @@ public class ExodusUI {
         islands.add(island1);
         islands.add(island2);
         islands.add(island3);
-        JLabel bannerText = createLabel(0, 0, 1000, 40, null, "", true, 26);
         JLabel crimeLabel = createLabel(10, 730, 100, 30, null, "Crime Rate", true, 12);
         world.add(crimeLabel);
+        
         JProgressBar crimeBar = new JProgressBar();
         crimeBar.setStringPainted(true);
         crimeBar.setLocation(125, 730);
@@ -168,9 +179,9 @@ public class ExodusUI {
             };
             island.addMouseListener(ml);
         }
-        JButton switchView = createButton(0, 50, 100, 50, "Switch");
+        JButton switchView = createButton(0, 0, 100, 50, "Switch");
 
-        JButton exit = createButton(1820, 50, 100, 50, "Exit");
+        JButton exit = createButton(1820, 0, 100, 50, "Exit");
         exit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -222,7 +233,6 @@ public class ExodusUI {
                 }
                 catch(Exception ex)
                 {
-                    alert("Invalid population number entered", bannerText);
                 }
                 HandleSound("click.wav");
             }
@@ -239,7 +249,6 @@ public class ExodusUI {
                 }
                 catch(Exception ex)
                 {
-                    alert("Invalid population number entered", bannerText);
                 }
                 HandleSound("click.wav");
             }
@@ -256,7 +265,7 @@ public class ExodusUI {
                 }
                 catch(Exception ex)
                 {
-                    alert("Invalid population number entered", bannerText);
+                    
                 }
                 HandleSound("click.wav");
             }
@@ -318,13 +327,20 @@ public class ExodusUI {
         investBox.setSize(250, 50);
         JButton investButton = createButton(335, 70, 100, 50, "Invest");
         
-        bannerText.setOpaque(false);
-        bannerText.setForeground(Color.WHITE);
         investButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 HandleSound("click.wav");
-                alert(investBox.getSelectedItem().toString(), bannerText);
+                try
+                {
+                    game.investIn(Float.parseFloat(investIn.getText()), investBox.getSelectedIndex());
+                    alert((String) investBox.getSelectedItem(), messageHolders);
+                }
+                catch(Exception ex)
+                {
+                    System.out.println(ex.getMessage());
+                }
+                
             }
 
         });
@@ -410,10 +426,6 @@ public class ExodusUI {
         world.add(actionButton);
         jf.add(switchView);
         
-        JLabel banner = createLabel(0, 0, 1920, 50, Color.RED, null, false);
-        
-        
-        
         JLabel rocketLabel = createLabel(50, 50, 400, 900, null, "Rocket", true);
         BufferedImage img = new BufferedImage(400, 900, BufferedImage.TYPE_INT_RGB);
         Graphics g = img.getGraphics();
@@ -424,8 +436,6 @@ public class ExodusUI {
         jf.add(editBudget);
         jf.add(actionPanel);
         jf.add(exit);
-        world.add(bannerText);
-        world.add(banner);
         jf.add(world);
         hq.add(hqBackground);
         world.add(worldText);
@@ -495,7 +505,19 @@ public class ExodusUI {
         ScheduledExecutorService gameClock = Executors.newSingleThreadScheduledExecutor();
         gameClock.scheduleAtFixedRate(() -> {
             try {
-                
+                boolean[] destroyed = game.getDestroyed();
+                if(destroyed[0])
+                {
+                    island1.setIcon(islandImages[6]);
+                }
+                if(destroyed[1])
+                {
+                    island2.setIcon(islandImages[7]);
+                }
+                if(destroyed[2])
+                {
+                    island3.setIcon(islandImages[8]);
+                }
                 float[] values = new float[] {game.getIslands()[islandSelected].getPopulation(), game.getIslands()[islandSelected].getMoney(), game.getIslands()[islandSelected].getGdpPerCapita(), Math.round(game.getIslands()[islandSelected].getHappiness() * 100), Math.round(game.getIslands()[islandSelected].getJobSecurity() * 100), Math.round(game.getIslands()[islandSelected].getEnergySecurity() * 100), Math.round(game.getIslands()[islandSelected].getFoodSecurity() * 100), Math.round(game.getIslands()[islandSelected].getCrimeRate() * 100)};
                 String[] descriptions = new String[] {"population", "money", "GDP per capita", "happiness", "employment level", "energy access", "food availability", "crime rate"};
                 String local = "<html>";
@@ -515,7 +537,6 @@ public class ExodusUI {
                 {
                     if(!game.getIslands()[islandSelected].justHitMilestone[i] && (values[i] == 0 || values[i] == 1))
                     {
-                        alert("Island" + (islandSelected + 1) + "'s " + descriptions[i] + " has hit " + values[i], bannerText); 
                         game.getIslands()[islandSelected].justHitMilestone[i] = true;
                         
                     }
@@ -539,11 +560,11 @@ public class ExodusUI {
                     }
                 }
                 worldText.setText(worldTextSummary + "</html>");
-
+                
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }, 0, (long) 80, TimeUnit.MILLISECONDS);
+        }, 0, (long) 200, TimeUnit.MILLISECONDS);
 
     }
 
@@ -624,9 +645,24 @@ public class ExodusUI {
     public static void main(String[] args) {
         ExodusUI ui = new ExodusUI();
     }
-    public void alert(String alert, JLabel bannerText)
+    
+    public void alert(String message, JLabel[] messageHolders)
     {
-        bannerText.setText("<html><b>" + alert + "</b></html>");
-        bannerText.setLocation(0, 5);
+        messageHolders[0].setText(messageHolders[1].getText());
+        messageHolders[1].setText(messageHolders[2].getText());
+        messageHolders[2].setText(messageHolders[3].getText());
+        messageHolders[3].setText(messageHolders[4].getText());
+        messageHolders[4].setText(messageHolders[5].getText());
+        messageHolders[5].setText(messageHolders[6].getText());
+        messageHolders[6].setText(messageHolders[7].getText());
+        messageHolders[7].setText(messageHolders[8].getText());
+        messageHolders[8].setText(messageHolders[9].getText());
+        messageHolders[9].setText(messageHolders[10].getText());
+        messageHolders[10].setText(messageHolders[11].getText());
+        messageHolders[11].setText(messageHolders[12].getText());
+        messageHolders[12].setText(messageHolders[13].getText());
+        messageHolders[13].setText(messageHolders[14].getText());
+        messageHolders[14].setText(messageHolders[15].getText());
+        messageHolders[15].setText(message);
     }
 }
