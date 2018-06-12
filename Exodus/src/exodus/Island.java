@@ -173,7 +173,7 @@ public class Island {
         crimeRate = addToClamped(crimeRate, crimeRate/85 + (Math.random() - 0.35f) * crimeRate/45 + popDensity * crimeRate/100);
         foodSecurity = addToClamped(foodSecurity, -foodSecurity/245 - (Math.random() - 0.8f) * foodSecurity/108 + budget[0] * 0.0015f - popDensity * 0.015f);
         energySecurity = addToClamped(energySecurity, -energySecurity/165 - (Math.random() - 0.6f) * energySecurity/116 + budget[0] * 0.0007f + budget[1] * 0.011f);
-        gdpPerCapita = addToClamped(gdpPerCapita, ((0.045 - crimeRate) + (foodSecurity - 0.905) + (energySecurity - 0.924) + (jobSecurity - 0.9)) / 0.3, 0, 100);
+        gdpPerCapita = addToClamped(gdpPerCapita, 0.4f * ((0.045 - crimeRate) + (foodSecurity - 0.905) + (energySecurity - 0.924) + (jobSecurity - 0.9)) / 0.3, 0, 100);
         jobSecurity = addToClamped(jobSecurity, (-0.94 + foodSecurity - crimeRate) / 20);
         happiness = addToClamped(happiness, -(-crimeRate + foodSecurity + energySecurity - 1.78)/127 + (budget[0] - 0.2f) * 0.03f - taxRate * 0.02f - popDensity * 0.011f);
         float sum = 0;
@@ -181,7 +181,7 @@ public class Island {
         {
             sum += budget[i];
         }
-        money -= sum * 40 * population * taxRate;
+        money -= sum * 40 * population * taxRate * 0.2f;
         
 //        System.out.println("Income: " + population * taxRate * gdpPerCapita);
 //        System.out.println("Expenses: " + sum * 40 * population * taxRate);

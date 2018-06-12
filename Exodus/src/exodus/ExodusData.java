@@ -142,30 +142,62 @@ public class ExodusData {
     }
     public void investIn(float amount, int choice)
     {
+        
         for(Island i : islands)
         {
+            i.pay(amount / 3);
             switch(choice)
             {
                 case 0:
-                    i.setEnergySecurity(i.addToClamped(i.getEnergySecurity(), 25));
-                    i.setJobSecurity(i.addToClamped(i.getJobSecurity(), -15));
+                    i.setEnergySecurity(i.addToClamped(i.getEnergySecurity(), 0.0002f * amount));
+                    i.setJobSecurity(i.addToClamped(i.getJobSecurity(), -0.000007f * amount));
                     break;
                 case 1:
-                    i.setEnergySecurity(i.addToClamped(i.getEnergySecurity(), -20));
-                    i.setJobSecurity(i.addToClamped(i.getJobSecurity(), 30));
+                    i.setEnergySecurity(i.addToClamped(i.getEnergySecurity(), -0.0002f * amount));
+                    i.setJobSecurity(i.addToClamped(i.getJobSecurity(), 0.0004f * amount));
                     break;
                 case 2:
+                    i.setFoodSecurity(i.addToClamped(i.getFoodSecurity(), 0.0003f * amount));
+                    i.setJobSecurity(i.addToClamped(i.getJobSecurity(), 0.0005f * amount));
+                    i.setEnergySecurity(i.addToClamped(i.getEnergySecurity(), -0.0002f * amount));
                     break;
                 case 3:
+                    i.setEnergySecurity(i.addToClamped(i.getEnergySecurity(), 0.0004f * amount));
+                    i.setJobSecurity(i.addToClamped(i.getJobSecurity(), -0.0006f * amount));
+                    i.setFoodSecurity(i.addToClamped(i.getFoodSecurity(), -0.0002f * amount));
                     break;
                 case 4:
                     break;
                 case 5:
+                    i.setHappiness(i.addToClamped(i.getHappiness(), 0.005f * amount));
                     break;
                 case 6:
+                    i.setHappiness(i.addToClamped(i.getHappiness(), -0.0005f * amount));
+                    i.setGdpPerCapita(i.addToClamped(i.getGdpPerCapita(), 0.005f * amount));
                     break;
             }
         }
+    }
+    public String rollTheDice()
+    {
+        float random = (float) Math.random() * (climateChange * 20);
+        if(random > 12)
+        {
+            switch((int) Math.ceil(random))
+            {
+                case 13:
+                    return "drought";
+                case 14: case 15:
+                    return "heatwave";
+                case 16: case 17:
+                    return "tsunami";
+                case 18: case 19:
+                    return "earthquake";
+                case 20:
+                    return "meteor";
+            }
+        }
+        return null;
     }
     public boolean[] getDestroyed()
     {

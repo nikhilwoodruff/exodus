@@ -83,6 +83,40 @@ public class ExodusUI {
         hq.setLayout(null);
         hq.setSize(1920, 1080);
         hq.setLocation(0, 1080);
+        JLabel selectPart1 = createLabel(100, 100, 250, 50, null, "Select Part 1:", false);
+        JComboBox selectPart1Box = new JComboBox(new String[] {"Basic rocket things", "Some slightly better rocket things", "Some fairly decent rocket things", "Some really expensive rocket things"});
+        selectPart1Box.setLocation(100, 150);
+        selectPart1Box.setSize(250, 50);
+        hq.add(selectPart1);
+        hq.add(selectPart1Box);
+        JLabel selectPart2 = createLabel(100, 200, 250, 50, null, "Select Part 1:", false);
+        JComboBox selectPart2Box = new JComboBox(new String[] {"Basic rocket things", "Some slightly better rocket things", "Some fairly decent rocket things", "Some really expensive rocket things"});
+        selectPart2Box.setLocation(100, 250);
+        selectPart2Box.setSize(250, 50);
+        hq.add(selectPart2);
+        hq.add(selectPart2Box);
+        JLabel selectPart3 = createLabel(100, 300, 250, 50, null, "Select Part 1:", false);
+        JComboBox selectPart3Box = new JComboBox(new String[] {"Basic rocket things", "Some slightly better rocket things", "Some fairly decent rocket things", "Some really expensive rocket things"});
+        selectPart3Box.setLocation(100, 350);
+        selectPart3Box.setSize(250, 50);
+        hq.add(selectPart3);
+        hq.add(selectPart3Box);
+        JLabel selectPart4 = createLabel(100, 400, 250, 50, null, "Select Part 1:", false);
+        JComboBox selectPart4Box = new JComboBox(new String[] {"Basic rocket things", "Some slightly better rocket things", "Some fairly decent rocket things", "Some really expensive rocket things"});
+        selectPart4Box.setLocation(100, 450);
+        selectPart4Box.setSize(250, 50);
+        hq.add(selectPart4);
+        hq.add(selectPart4Box);
+        JLabel selectPart5 = createLabel(100, 500, 250, 50, null, "Select Part 1:", false);
+        JComboBox selectPart5Box = new JComboBox(new String[] {"Basic rocket things", "Some slightly better rocket things", "Some fairly decent rocket things", "Some really expensive rocket things"});
+        selectPart5Box.setLocation(100, 550);
+        selectPart5Box.setSize(250, 50);
+        hq.add(selectPart5);
+        hq.add(selectPart5Box);
+        JLabel stats = createLabel(1350, 250, 250, 250, null, "<html>Projected chance of successful launch: </html>", false);
+        hq.add(stats);
+        JLabel cost = createLabel(1350, 450, 250, 250, null, "<html>Total cost of launch: </html>", false);
+        hq.add(cost);
         JLabel hqBackground = createLabel(0, 0, 1920, 1080, readImage("hqBackground.png", 1920, 1080), null, false);
         JLabel localMenu = createLabel(0, 600, 400, 480, Color.GRAY, null, false);
         JLabel worldMenu = createLabel(1520, 600, 400, 480, Color.GRAY, null, false);
@@ -190,6 +224,7 @@ public class ExodusUI {
             }
 
         });
+       
 
         JLabel background = createLabel(0, 0, 1920, 1080, new Color(134, 190, 255), null, false);
 
@@ -334,7 +369,7 @@ public class ExodusUI {
                 try
                 {
                     game.investIn(Float.parseFloat(investIn.getText()), investBox.getSelectedIndex());
-                    alert((String) investBox.getSelectedItem(), messageHolders);
+                    alert("You invested in " + (String) investBox.getSelectedItem(), messageHolders);
                 }
                 catch(Exception ex)
                 {
@@ -432,7 +467,7 @@ public class ExodusUI {
         Rocket rocket = new Rocket();
         rocket.drawRocket(g, 0, 0, jf);
         rocketLabel.setIcon(new ImageIcon(img));
-        hq.add(rocketLabel);
+        //hq.add(rocketLabel);
         jf.add(editBudget);
         jf.add(actionPanel);
         jf.add(exit);
@@ -532,7 +567,20 @@ public class ExodusUI {
                 energyBar.setValue((int) values[5]);
                 foodBar.setValue((int) values[6]);
                 crimeBar.setValue((int) values[7]);
-                
+                stats.setText("<html>Projected chance of successful launch: " + (float) (selectPart1Box.getSelectedIndex() + selectPart2Box.getSelectedIndex() + selectPart3Box.getSelectedIndex() + selectPart4Box.getSelectedIndex() + selectPart5Box.getSelectedIndex()) / 20 + "</html>");
+                cost.setText("<html>Total cost of launch: " + (float) (selectPart1Box.getSelectedIndex() + selectPart2Box.getSelectedIndex() + selectPart3Box.getSelectedIndex() + selectPart4Box.getSelectedIndex() + selectPart5Box.getSelectedIndex()) * 10000 / 20 + "</html>");
+                JButton launch = createButton(1350, 600, 200, 200, "LAUNCH");
+                launch.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                HandleSound("click.wav");
+            }
+
+        });
+                hq.add(launch);
+                JPanel dlc = new JPanel();
+                JLabel paywall = createLabel(0, 0, 1920, 1080, readImage("paywall.png", 1920, 1080), null, false);
+                dlc.add(paywall);
                 for(int i = 0; i < 8; i++)
                 {
                     if(!game.getIslands()[islandSelected].justHitMilestone[i] && (values[i] == 0 || values[i] == 1))
@@ -552,6 +600,20 @@ public class ExodusUI {
             try {
                 if (!budgetOpen && !actionOpen && !(game.getWorldTime() > game.getWorldEndTime())) {
                     game.nextYear();
+                    String disaster = game.rollTheDice();
+                    if(disaster != null)
+                    {
+                        float preparation = game.getIslands()[0].getBudget()[2] + game.getIslands()[1].getBudget()[2] + game.getIslands()[2].getBudget()[2];
+                        preparation /= 3;
+                        if(Math.random() > preparation + 0.25)
+                        {
+                            alert("A " + disaster + " has occurred on island " + (Math.floor(Math.random() * 3) + 1) + "!", messageHolders);
+                        }
+                        else
+                        {
+                            alert("A " + disaster + " occurred, but it was protected against by your defenses.", messageHolders);
+                        }
+                    }
                 }
                 String worldTextSummary = "<html>";
                 for (int i = 0; i < 4; i++) {
@@ -564,7 +626,7 @@ public class ExodusUI {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }, 0, (long) 200, TimeUnit.MILLISECONDS);
+        }, 0, (long) 650, TimeUnit.MILLISECONDS);
 
     }
 
