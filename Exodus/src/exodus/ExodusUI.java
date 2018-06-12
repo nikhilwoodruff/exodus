@@ -6,6 +6,7 @@
 package exodus;
 
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -15,6 +16,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -29,6 +31,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JSlider;
@@ -46,8 +49,34 @@ public class ExodusUI {
     boolean budgetOpen;
     boolean actionOpen;
     List<Animation> jobs = new ArrayList<Animation>();
+    float chanceOfSuccess = 0;
 
     public ExodusUI() {
+        JPanel paywall = new JPanel();
+        paywall.setSize(1920, 1080);
+        paywall.setLocation(0, 1080);
+        JLabel backgrnd = createLabel(0, 0, 1920, 1080, readImage("paywall.png", 1920, 1080), null, false);
+        JButton exitPaywall = createButton(500, 500, 50, 100, "Take me back");
+        JButton bypass = createButton(500, 750, 50, 250, "I have already bought it, take me to the rocket launch");
+        bypass.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                HandleSound("click.wav");
+                openWebpage("https://www.youtube.com/watch?v=lS9XcEEek48");
+            }
+
+        });
+        exitPaywall.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                HandleSound("click.wav");
+                jobs.add(Animation.globalAnimation(paywall, 0, 1080, 1));
+            }
+
+        });
+        paywall.add(bypass);
+        paywall.add(exitPaywall);
+        paywall.add(backgrnd);
         ImageIcon[] islandImages = new ImageIcon[9];
         islandImages[0] = readImage("island1.png", 450, 450);
         islandImages[1] = readImage("island2.png", 450, 450);
@@ -220,7 +249,26 @@ public class ExodusUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 HandleSound("click.wav");
-                jf.dispatchEvent(new WindowEvent(jf, WindowEvent.WINDOW_CLOSING));
+                Object[] options = {"0 in everything",
+                    "Mediocre",
+                    "10/10 an absolutely perfect game"};
+                int n = JOptionPane.showOptionDialog(jf,
+                    "How would you rate this game?",
+                    "Rate the game please",
+                    JOptionPane.YES_NO_CANCEL_OPTION,
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    options,
+                    options[2]);
+                if(n == 2)
+                {
+                    jf.dispatchEvent(new WindowEvent(jf, WindowEvent.WINDOW_CLOSING));
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(jf, "Please try playing the game again");
+                }
+                
             }
 
         });
@@ -468,6 +516,7 @@ public class ExodusUI {
         rocket.drawRocket(g, 0, 0, jf);
         rocketLabel.setIcon(new ImageIcon(img));
         //hq.add(rocketLabel);
+        jf.add(paywall);
         jf.add(editBudget);
         jf.add(actionPanel);
         jf.add(exit);
@@ -567,20 +616,29 @@ public class ExodusUI {
                 energyBar.setValue((int) values[5]);
                 foodBar.setValue((int) values[6]);
                 crimeBar.setValue((int) values[7]);
-                stats.setText("<html>Projected chance of successful launch: " + (float) (selectPart1Box.getSelectedIndex() + selectPart2Box.getSelectedIndex() + selectPart3Box.getSelectedIndex() + selectPart4Box.getSelectedIndex() + selectPart5Box.getSelectedIndex()) / 20 + "</html>");
+                chanceOfSuccess = (float) (selectPart1Box.getSelectedIndex() + selectPart2Box.getSelectedIndex() + selectPart3Box.getSelectedIndex() + selectPart4Box.getSelectedIndex() + selectPart5Box.getSelectedIndex()) / 20;
+                stats.setText("<html>Projected chance of successful launch: " + chanceOfSuccess  + "</html>");
                 cost.setText("<html>Total cost of launch: " + (float) (selectPart1Box.getSelectedIndex() + selectPart2Box.getSelectedIndex() + selectPart3Box.getSelectedIndex() + selectPart4Box.getSelectedIndex() + selectPart5Box.getSelectedIndex()) * 10000 / 20 + "</html>");
+                JPanel endPanel = new JPanel();
+                endPanel.setLocation(860, 1080);
+                endPanel.setSize(400, 400);
+                endPanel.setVisible(true);
+                JLabel endMessage = createLabel(50, 50, 250, 100, null, null, false);
                 JButton launch = createButton(1350, 600, 200, 200, "LAUNCH");
                 launch.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 HandleSound("click.wav");
+//                jobs.add(Animation.globalAnimation(endPanel, 860, 540, 2));
+//                if(Math.random() < chanceOfSuccess)
+//                {
+//                    endMessage.setText("<You won!" + "<br>You saved ");
+//                }
+                lock(paywall, jobs);
             }
 
         });
                 hq.add(launch);
-                JPanel dlc = new JPanel();
-                JLabel paywall = createLabel(0, 0, 1920, 1080, readImage("paywall.png", 1920, 1080), null, false);
-                dlc.add(paywall);
                 for(int i = 0; i < 8; i++)
                 {
                     if(!game.getIslands()[islandSelected].justHitMilestone[i] && (values[i] == 0 || values[i] == 1))
@@ -727,4 +785,15 @@ public class ExodusUI {
         messageHolders[14].setText(messageHolders[15].getText());
         messageHolders[15].setText(message);
     }
+    public void lock(JPanel lockPanel, List<Animation> jobs)
+    {
+        jobs.add(Animation.globalAnimation(lockPanel, 0, 0, 1));
+    }
+    public static void openWebpage(String urlString) {
+    try {
+        Desktop.getDesktop().browse(new URL(urlString).toURI());
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
 }

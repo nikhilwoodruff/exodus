@@ -181,7 +181,7 @@ public class Island {
         {
             sum += budget[i];
         }
-        money -= sum * 40 * population * taxRate * 0.2f;
+        money -= sum * 40 * population * taxRate * 0.45f;
         
 //        System.out.println("Income: " + population * taxRate * gdpPerCapita);
 //        System.out.println("Expenses: " + sum * 40 * population * taxRate);
